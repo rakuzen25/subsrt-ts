@@ -1,14 +1,16 @@
 {
   "name": "subsrt",
+  "packageManager": "yarn@3.2.4",
   "description": "Subtitle converter",
   "version": "1.1.1",
   "author": "Papn Kukn",
   "license": "MIT",
+  "type": "module",
   "main": "lib/subsrt.js",
-  "bin": {
-    "subsrt": "bin/subsrt.js"
-  },
+  "bin": "bin/subsrt.js",
   "scripts": {
+    "format": "prettier --write . && eslint --fix .",
+    "lint": "eslint .",
     "test": "nodeunit test"
   },
   "repository": {
@@ -18,5 +20,10 @@
   "bugs": {
     "url": "https://github.com/papnkukn/subsrt/issues"
   },
-  "dependencies": {}
+  "devDependencies": {
+    "eslint": "^8.25.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "prettier": "^2.7.1"
+  }
 }

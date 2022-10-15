@@ -1,17 +1,18 @@
-var fs = require('fs');
-var subsrt = require('../lib/subsrt.js');
+import { readFileSync } from "fs";
 
-exports["Detect"] = function(test) {
-  var formats = subsrt.list();
-  for (var i = 0; i < formats.length; i++) {
-    var ext = formats[i];
-    console.log("Detect ." + ext);
-    var content = fs.readFileSync('./test/fixtures/sample.' + ext, 'utf8');
-    
-    var expected = ext;
-    var actual = subsrt.detect(content);
-    
-    test.ok(actual == expected, "Expected '" + expected + "' but got '" + actual + "'!");
-  }
-  test.done();
+import { detect, list } from "../lib/subsrt.js";
+
+export const Detect = (test) => {
+    const formats = list();
+    for (let i = 0; i < formats.length; i++) {
+        const ext = formats[i];
+        console.log(`Detect .${ext}`);
+        const content = readFileSync(`./test/fixtures/sample.${ext}`, "utf8");
+
+        const expected = ext;
+        const actual = detect(content);
+
+        test.ok(actual === expected, `Expected '${expected}' but got '${actual}'!`);
+    }
+    test.done();
 };
