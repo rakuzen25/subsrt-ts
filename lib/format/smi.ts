@@ -1,7 +1,12 @@
+import { buildHandler } from "../handler.js";
+import { Caption, ContentCaption, MetaCaption } from "../types/handler.js";
+
+import { SMIBuildOptions, SMIParseOptions } from "./types/smi.js";
+
 const FORMAT_NAME = "smi";
 
 const helper = {
-    htmlEncode: (text) =>
+    htmlEncode: (text: string) =>
         text
             .replace(/&/g, "&amp;")
             .replace(/"/g, "&quot;")
@@ -10,7 +15,7 @@ const helper = {
             .replace(/>/g, "&gt;")
             //.replace(/\s/g, '&nbsp;')
             .replace(/\r?\n/g, "<BR>"),
-    htmlDecode: (html, eol) =>
+    htmlDecode: (html: string, eol: string) =>
         html
             .replace(/<BR\s*\/?>/gi, eol || "\r\n")
             .replace(/&nbsp;/g, " ")
@@ -24,22 +29,26 @@ const helper = {
 /**
  * Parses captions in SAMI format (.smi).
  */
-const parse = (content, options) => {
+const parse = (content: string, options: SMIParseOptions) => {
+    if (options.format && options.format !== FORMAT_NAME) {
+        throw new Error(`Invalid format: ${options.format}`);
+    }
+
     const captions = [];
     const eol = options.eol || "\r\n";
 
-    const title = /<TITLE[^>]*>([\s\S]*)<\/TITLE>/gi.exec(content);
+    const title = /<TITLE[^>]*>([\s\S]*)<\/TITLE>/i.exec(content);
     if (title) {
-        const caption = {};
+        const caption = <MetaCaption>{};
         caption.type = "meta";
         caption.name = "title";
-        caption.data = title[1].replace(/^[\s\r\n]*/g, "").replace(/[\s\r\n]*$/g, "");
+        caption.data = title[1].replace(/^\s*/g, "").replace(/\s*$/g, "");
         captions.push(caption);
     }
 
-    const style = /<STYLE[^>]*>([\s\S]*)<\/STYLE>/gi.exec(content);
+    const style = /<STYLE[^>]*>([\s\S]*)<\/STYLE>/i.exec(content);
     if (style) {
-        const caption = {};
+        const caption = <MetaCaption>{};
         caption.type = "meta";
         caption.name = "style";
         caption.data = style[1];
@@ -47,8 +56,8 @@ const parse = (content, options) => {
     }
 
     const sami = content
-        .replace(/^[\s\S]*<BODY[^>]*>/gi, "") //Remove content before body
-        .replace(/<\/BODY[^>]*>[\s\S]*$/gi, ""); //Remove content after body
+        .replace(/^[\s\S]*<BODY[^>]*>/gi, "") // Remove content before body
+        .replace(/<\/BODY[^>]*>[\s\S]*$/gi, ""); // Remove content after body
 
     let prev = null;
     const parts = sami.split(/<SYNC/gi);
@@ -59,10 +68,10 @@ const parse = (content, options) => {
 
         const part = `<SYNC${parts[i]}`;
 
-        //<SYNC Start = 1000>
-        const match = /^<SYNC[^>]+Start\s*=\s*["']?(\d+)["']?[^>]*>([\s\S]*)/gi.exec(part);
+        // <SYNC Start = 1000>
+        const match = /^<SYNC[^>]+Start\s*=\s*["']?(\d+)[^\d>]*>([\s\S]*)/i.exec(part);
         if (match) {
-            const caption = {};
+            const caption = <ContentCaption>{};
             caption.type = "caption";
             caption.start = parseInt(match[1]);
             caption.end = caption.start + 2000;
@@ -70,18 +79,15 @@ const parse = (content, options) => {
             caption.content = match[2].replace(/^<\/SYNC[^>]*>/gi, "");
 
             let blank = true;
-            let p = /^<P[^>]+Class\s*=\s*["']?([\w\d\-_]+)["']?[^>]*>([\s\S]*)/gi.exec(caption.content);
-            if (!p) {
-                p = /^<P([^>]*)>([\s\S]*)/gi.exec(caption.content);
-            }
+            const p = /^<P.+Class\s*=\s*["']?([\w-]+)(?: .*)?>([\s\S]*)/i.exec(caption.content) || /^<P([^>]*)>([\s\S]*)/i.exec(caption.content);
             if (p) {
-                let html = p[2].replace(/<P[\s\S]+$/gi, ""); //Remove string after another <P> tag
+                let html = p[2].replace(/<P[\s\S]+$/gi, ""); // Remove string after another <P> tag
                 html = html
-                    .replace(/<BR\s*\/?>[\s\r\n]+/gi, eol)
+                    .replace(/<BR\s*\/?>\s+/gi, eol)
                     .replace(/<BR\s*\/?>/gi, eol)
-                    .replace(/<[^>]+>/g, ""); //Remove all tags
-                html = html.replace(/^[\s\r\n]+/g, "").replace(/[\s\r\n]+$/g, ""); //Trim new lines and spaces
-                blank = html.replace(/&nbsp;/gi, " ").replace(/[\s\r\n]+/g, "").length === 0;
+                    .replace(/<[^>]+>/g, ""); // Remove all tags
+                html = html.replace(/^\s+/g, "").replace(/\s+$/g, ""); // Trim new lines and spaces
+                blank = html.replace(/&nbsp;/gi, " ").replace(/\s+/g, "").length === 0;
                 caption.text = helper.htmlDecode(html, eol);
             }
 
@@ -93,7 +99,7 @@ const parse = (content, options) => {
                 captions.push(caption);
             }
 
-            //Update previous
+            // Update previous
             if (prev) {
                 prev.end = caption.start;
                 prev.duration = prev.end - prev.start;
@@ -113,7 +119,7 @@ const parse = (content, options) => {
 /**
  * Builds captions in SAMI format (.smi).
  */
-const build = (captions, options) => {
+const build = (captions: Caption[], options: SMIBuildOptions) => {
     const eol = options.eol || "\r\n";
 
     let content = "";
@@ -135,15 +141,15 @@ const build = (captions, options) => {
             continue;
         }
 
-        if (typeof caption.type === "undefined" || caption.type === "caption") {
-            //Start of caption
+        if (!caption.type || caption.type === "caption") {
+            // Start of caption
             content += `<SYNC Start=${caption.start}>${eol}`;
             content += `  <P Class=LANG>${helper.htmlEncode(caption.text || "")}${options.closeTags ? "</P>" : ""}${eol}`;
             if (options.closeTags) {
                 content += `</SYNC>${eol}`;
             }
 
-            //Blank line indicates the end of caption
+            // Blank line indicates the end of caption
             content += `<SYNC Start=${caption.end}>${eol}`;
             content += "  <P Class=LANG>" + `&nbsp;${options.closeTags ? "</P>" : ""}${eol}`;
             if (options.closeTags) {
@@ -167,20 +173,17 @@ const build = (captions, options) => {
 /**
  * Detects a subtitle format from the content.
  */
-const detect = (content) => {
-    if (typeof content === "string") {
-        if (/<SAMI[^>]*>[\s\S]*<BODY[^>]*>/g.test(content)) {
-            /*
-      <SAMI>
-      <BODY>
-      <SYNC Start=...
-      ...
-      </BODY>
-      </SAMI>
-      */
-            return "smi";
-        }
-    }
+const detect = (content: string) => {
+    /*
+    <SAMI>
+    <BODY>
+    <SYNC Start=...
+    ...
+    </BODY>
+    </SAMI>
+    */
+    return /<SAMI[^>]*>[\s\S]*<BODY[^>]*>/.test(content);
 };
 
+export default buildHandler({ name: FORMAT_NAME, build, detect, helper, parse });
 export { FORMAT_NAME as name, build, detect, helper, parse };

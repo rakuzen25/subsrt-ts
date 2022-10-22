@@ -1,13 +1,13 @@
 import { readFileSync, writeFileSync } from "fs";
 import { extname } from "path";
 
-import { build as _build, convert as _convert, detect as _detect, list as _list, parse as _parse } from "./lib/subsrt.js";
+import { build as _build, convert as _convert, detect as _detect, list as _list, parse as _parse } from "./dist/subsrt.js";
 
 const config = {
     verbose: process.env.NODE_VERBOSE === "true" || process.env.NODE_VERBOSE === "1",
 };
 
-//Command line arguments
+// Command line arguments
 const args = process.argv.slice(2);
 for (let i = 0; i < args.length; i++) {
     switch (args[i]) {
@@ -61,7 +61,7 @@ for (let i = 0; i < args.length; i++) {
             break;
 
         case "--version":
-            console.log(require("./package.json").version);
+            console.log((await import("./package.json")).version);
             process.exit(0);
             break;
 

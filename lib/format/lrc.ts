@@ -1,15 +1,21 @@
+import { buildHandler } from "../handler.js";
+import { BuildOptions, Caption, ContentCaption, MetaCaption, ParseOptions } from "../types/handler.js";
+
 const FORMAT_NAME = "lrc";
 
 const helper = {
-    toMilliseconds: (s) => {
-        const match = /^\s*(\d+):(\d{1,2})([.,](\d{1,3}))?\s*$/.exec(s);
+    toMilliseconds: (s: string) => {
+        const match = /^\s*(\d+):(\d{1,2})(?:[.,](\d{1,3}))?\s*$/.exec(s);
+        if (!match) {
+            throw new Error(`Invalid time format: ${s}`);
+        }
         const mm = parseInt(match[1]);
         const ss = parseInt(match[2]);
-        const ff = match[4] ? parseInt(match[4]) : 0;
+        const ff = match[3] ? parseInt(match[3]) : 0;
         const ms = mm * 60 * 1000 + ss * 1000 + ff * 10;
         return ms;
     },
-    toTimeString: (ms) => {
+    toTimeString: (ms: number) => {
         const mm = Math.floor(ms / 1000 / 60);
         const ss = Math.floor((ms / 1000) % 60);
         const ff = Math.floor(ms % 1000);
@@ -22,7 +28,7 @@ const helper = {
  * Parses captions in LRC format.
  * @see https://en.wikipedia.org/wiki/LRC_%28file_format%29
  */
-const parse = (content, options) => {
+const parse = (content: string, options: ParseOptions) => {
     let prev = null;
     const captions = [];
     // const eol = options.eol || "\r\n";
@@ -32,20 +38,20 @@ const parse = (content, options) => {
             continue;
         }
 
-        //LRC content
-        const regex = /^\[(\d{1,2}:\d{1,2}([.,]\d{1,3})?)\](.*)(\r?\n)*$/gi;
+        // LRC content
+        const regex = /^\[(\d{1,2}:\d{1,2}(?:[.,]\d{1,3})?)\](.*)(?:\r?\n)*$/;
         const match = regex.exec(parts[i]);
         if (match) {
-            const caption = {};
+            const caption = <ContentCaption>{};
             caption.type = "caption";
             caption.start = helper.toMilliseconds(match[1]);
             caption.end = caption.start + 2000;
             caption.duration = caption.end - caption.start;
-            caption.content = match[3];
+            caption.content = match[2];
             caption.text = caption.content;
             captions.push(caption);
 
-            //Update previous
+            // Update previous
             if (prev) {
                 prev.end = caption.start;
                 prev.duration = prev.end - prev.start;
@@ -54,10 +60,10 @@ const parse = (content, options) => {
             continue;
         }
 
-        //LRC meta
-        const meta = /^\[([\w\d]+):([^\]]*)\](\r?\n)*$/gi.exec(parts[i]);
+        // LRC meta
+        const meta = /^\[(\w+):([^\]]*)\](?:\r?\n)*$/.exec(parts[i]);
         if (meta) {
-            const caption = {};
+            const caption = <MetaCaption>{};
             caption.type = "meta";
             caption.tag = meta[1];
             if (meta[2]) {
@@ -78,20 +84,20 @@ const parse = (content, options) => {
  * Builds captions in LRC format
  * @see https://en.wikipedia.org/wiki/LRC_%28file_format%29
  */
-const build = (captions, options) => {
+const build = (captions: Caption[], options: BuildOptions) => {
     let content = "";
     let lyrics = false;
     const eol = options.eol || "\r\n";
     for (let i = 0; i < captions.length; i++) {
         const caption = captions[i];
         if (caption.type === "meta") {
-            if (caption.tag && caption.data) {
+            if (caption.tag && caption.data && typeof caption.data === "string") {
                 content += `[${caption.tag}:${caption.data.replace(/[\r\n]+/g, " ")}]${eol}`;
             }
             continue;
         }
 
-        if (typeof caption.type === "undefined" || caption.type === "caption") {
+        if (!caption.type || caption.type === "caption") {
             if (!lyrics) {
                 content += eol; //New line when lyrics start
                 lyrics = true;
@@ -111,16 +117,12 @@ const build = (captions, options) => {
 /**
  * Detects a subtitle format from the content.
  */
-const detect = (content) => {
-    if (typeof content === "string") {
-        if (/\r?\n\[\d+:\d{1,2}(?:[.,]\d{1,3})?\].*\r?\n/.test(content)) {
-            /*
-                [04:48.28]Sister, perfume?
-            */
-            //return "lrc";
-            return true;
-        }
-    }
+const detect = (content: string) => {
+    /*
+    [04:48.28]Sister, perfume?
+    */
+    return /\r?\n\[\d+:\d{1,2}(?:[.,]\d{1,3})?\].*\r?\n/.test(content);
 };
 
+export default buildHandler({ name: FORMAT_NAME, build, detect, helper, parse });
 export { FORMAT_NAME as name, build, detect, helper, parse };
