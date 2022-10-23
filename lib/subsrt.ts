@@ -1,24 +1,11 @@
-import { Handler } from "./handler.js";
+import formats from "./format/index.js";
 import { BuildOptions, Caption, ConvertOptions, ParseOptions, ResyncOptions } from "./types/handler.js";
-import { ResyncFunction, SubsrtFormats, SubsrtInterface } from "./types/subsrt.js";
+import { ResyncFunction, SubsrtInterface } from "./types/subsrt.js";
 
 const clone = (obj: object) => JSON.parse(JSON.stringify(obj));
 
 class Subsrt implements SubsrtInterface {
-    format = <SubsrtFormats>{};
-
-    /**
-     * Loads the subtitle format parsers and builders.
-     */
-    async init() {
-        // Load in the predefined order
-        const formats = ["vtt", "lrc", "smi", "ssa", "ass", "sub", "srt", "sbv", "json"];
-        for (let i = 0; i < formats.length; i++) {
-            const f = formats[i];
-            const handler: Handler = (await import(`./format/${f}.js`)).default;
-            this.format[handler.name] = handler;
-        }
-    }
+    format = formats;
 
     /**
      * Gets a list of supported subtitle formats.
@@ -174,7 +161,5 @@ class Subsrt implements SubsrtInterface {
 }
 
 const subsrt = new Subsrt();
-await subsrt.init();
-
 export default subsrt;
 export const { format, list, detect, parse, build, convert, resync } = subsrt;
