@@ -1,6 +1,6 @@
 import { readFileSync } from "fs";
 
-import { detect, list } from "../dist/subsrt.js";
+import { detect, list } from "../lib/subsrt";
 
 describe("Detect", () => {
     it("should detect a subtitle file", () => {

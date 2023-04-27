@@ -1,4 +1,4 @@
-import { format, list } from "../dist/subsrt.js";
+import { format, list } from "../lib/subsrt";
 
 describe("Time", () => {
     it("should convert time to milliseconds", () => {

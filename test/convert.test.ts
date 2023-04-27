@@ -1,6 +1,6 @@
 import { readFileSync } from "fs";
 
-import { convert, detect, list, parse } from "../dist/subsrt.js";
+import { convert, detect, list, parse } from "../lib/subsrt";
 
 describe("Convert", () => {
     it("should convert a subtitle file", () => {
