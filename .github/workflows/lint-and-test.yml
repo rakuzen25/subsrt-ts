@@ -1,4 +1,4 @@
-name: Lint
+name: Lint and test
 
 on:
     # Trigger the workflow on push or pull request,
@@ -13,8 +13,8 @@ on:
             - dev
 
 jobs:
-    run-linters:
-        name: Run linters
+    run-linters-and-tests:
+        name: Run linters and tests
         runs-on: ubuntu-latest
 
         steps:
@@ -33,8 +33,9 @@ jobs:
             - name: Run linters
               uses: wearerequired/lint-action@v2
               with:
-                  auto_fix: true
-                  commit_message: "style: fix code style issues with ${linter}"
-                  github_token: ${{ secrets.GITHUB_TOKEN }}
                   eslint: true
+                  eslint_extensions: js,ts
                   prettier: true
+
+            - name: Run tests
+              run: yarn test
