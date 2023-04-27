@@ -1,0 +1,42 @@
+on:
+    push:
+        branches:
+            - main
+            - dev
+
+permissions:
+    contents: write
+    pull-requests: write
+
+name: Release Please
+
+jobs:
+    release-please:
+        name: Release Please
+        runs-on: ubuntu-latest
+        steps:
+            - name: Run Release Please
+              uses: google-github-actions/release-please-action@v3
+              with:
+                  release-type: node
+                  package-name: subsrt-ts
+            # The logic below handles the npm publication:
+            - name: Check out Git repository
+              uses: actions/checkout@v3
+              # these if statements ensure that a publication only occurs when
+              # a new release is created:
+              if: ${{ steps.release.outputs.release_created }}
+            - name: Set up Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 18
+                  registry-url: "https://registry.npmjs.org"
+              if: ${{ steps.release.outputs.release_created }}
+            - name: Install Node.js dependencies
+              run: yarn install --immutable
+              if: ${{ steps.release.outputs.release_created }}
+            - name: Publish to npm
+              run: yarn npm publish
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+              if: ${{ steps.release.outputs.release_created }}
