@@ -21,6 +21,12 @@ jobs:
             - name: Check out Git repository
               uses: actions/checkout@v2
 
+            - name: Cache Node.js dependencies
+              uses: actions/cache@v3
+              with:
+                  path: **/node_modules
+                  key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+
             - name: Set up Node.js
               uses: actions/setup-node@v1
               with:
@@ -33,6 +39,7 @@ jobs:
             - name: Run linters
               uses: wearerequired/lint-action@v2
               with:
+                  continue_on_error: false
                   eslint: true
                   eslint_extensions: js,ts
                   prettier: true
