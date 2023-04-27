@@ -7,10 +7,16 @@ on:
         branches:
             - main
             - dev
+        paths:
+            - "**.js"
+            - "**.ts"
     pull_request:
         branches:
             - main
             - dev
+        paths:
+            - "**.js"
+            - "**.ts"
 
 jobs:
     run-linters-and-tests:
