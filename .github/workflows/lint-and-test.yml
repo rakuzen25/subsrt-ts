@@ -1,0 +1,48 @@
+name: Lint and test
+
+on:
+    # Trigger the workflow on push or pull request,
+    # but only for the main branch
+    push:
+        branches:
+            - main
+            - dev
+    pull_request:
+        branches:
+            - main
+            - dev
+
+jobs:
+    run-linters-and-tests:
+        name: Run linters and tests
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Check out Git repository
+              uses: actions/checkout@v3
+
+            - name: Cache Node.js dependencies
+              uses: actions/cache@v3
+              with:
+                  path: "**/node_modules"
+                  key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 18
+
+            # ESLint and Prettier must be in `package.json`
+            - name: Install Node.js dependencies
+              run: yarn install --immutable
+
+            - name: Run linters
+              uses: wearerequired/lint-action@v2
+              with:
+                  continue_on_error: false
+                  eslint: true
+                  eslint_extensions: js,ts
+                  prettier: true
+
+            - name: Run tests
+              run: yarn test
