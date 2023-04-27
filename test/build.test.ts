@@ -1,6 +1,6 @@
 import { readFileSync } from "fs";
 
-import { build, list } from "../lib/subsrtt";
+import { build, list } from "../lib/subsrt";
 
 describe("Build", () => {
     it("should build a subtitle file", () => {
