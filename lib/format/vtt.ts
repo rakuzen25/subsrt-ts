@@ -38,7 +38,7 @@ const parse = (content: string, options: ParseOptions) => {
     for (let i = 0; i < parts.length; i++) {
         // WebVTT data
         const regex =
-            /^([^\r\n]+\r?\n)?((?:\d{1,2}:)?\d{1,2}:\d{1,2}(?:[.,]\d{1,3})?)\s*-->\s*((?:\d{1,2}:)?\d{1,2}:\d{1,2}(?:[.,]\d{1,3})?)\s?.*\r?\n([\s\S]*)$/;
+            /^([^\r\n]+\r?\n)?((?:\d{1,2}:)?\d{1,2}:\d{1,2}(?:[.,]\d{1,3})?)\s*-->\s*((?:\d{1,2}:)?\d{1,2}:\d{1,2}(?:[.,]\d{1,3})?)[^\S\r\n]?.*\r?\n([\s\S]*)$/;
         const match = regex.exec(parts[i]);
         if (match) {
             const caption = <ContentCaption>{};
