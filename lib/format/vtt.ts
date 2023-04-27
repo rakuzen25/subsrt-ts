@@ -50,8 +50,7 @@ const parse = (content: string, options: ParseOptions) => {
             caption.start = helper.toMilliseconds(match[2]);
             caption.end = helper.toMilliseconds(match[3]);
             caption.duration = caption.end - caption.start;
-            const lines = match[4].split(/\r?\n/);
-            caption.content = lines.join(" ");
+            caption.content = match[4];
             caption.text = caption.content
                 .replace(/<[^>]+>/g, "") // <b>bold</b> or <i>italic</i>
                 .replace(/\{[^}]+\}/g, ""); // {b}bold{/b} or {i}italic{/i}
