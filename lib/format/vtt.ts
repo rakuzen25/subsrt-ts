@@ -35,11 +35,11 @@ const parse = (content: string, options: ParseOptions) => {
     let index = 1;
     const captions: Caption[] = [];
     const parts = content.split(/\r?\n\s*\n/);
-    for (let i = 0; i < parts.length; i++) {
+    for (const part of parts) {
         // WebVTT data
         const regex =
             /^([^\r\n]+\r?\n)?((?:\d{1,2}:)?\d{1,2}:\d{1,2}(?:[.,]\d{1,3})?)\s*-->\s*((?:\d{1,2}:)?\d{1,2}:\d{1,2}(?:[.,]\d{1,3})?)[^\S\r\n]?.*\r?\n([\s\S]*)$/;
-        const match = regex.exec(parts[i]);
+        const match = regex.exec(part);
         if (match) {
             const caption = <ContentCaption>{};
             caption.type = "caption";
@@ -61,7 +61,7 @@ const parse = (content: string, options: ParseOptions) => {
         // WebVTT meta
         // FIXME: prevent backtracking
         // eslint-disable-next-line regexp/no-super-linear-backtracking
-        const meta = /^([A-Z]+)(\r?\n([\s\S]*))?$/.exec(parts[i]) || /^([A-Z]+)\s+([^\r\n]*)$/.exec(parts[i]);
+        const meta = /^([A-Z]+)(\r?\n([\s\S]*))?$/.exec(part) || /^([A-Z]+)\s+([^\r\n]*)$/.exec(part);
         if (meta) {
             const caption = <MetaCaption>{};
             caption.type = "meta";
@@ -74,7 +74,7 @@ const parse = (content: string, options: ParseOptions) => {
         }
 
         if (options.verbose) {
-            console.log("WARN: Unknown part", parts[i]);
+            console.log("WARN: Unknown part", part);
         }
     }
     return captions;
