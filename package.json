@@ -38,6 +38,7 @@
         "lint": "eslint .",
         "build": "rm -rf dist && tsc --noEmitOnError",
         "test": "yarn node --experimental-vm-modules --es-module-specifier-resolution=node $(yarn bin jest)",
+        "testCoverage": "yarn node --experimental-vm-modules --es-module-specifier-resolution=node $(yarn bin jest) --coverage=true --coverageReporters=cobertura",
         "docs": "yarn typedoc --plugin typedoc-plugin-missing-exports lib/**.ts",
         "preversion": "yarn run format && yarn run lint && yarn run build && yarn run test",
         "prepublishOnly": "yarn run test && yarn run lint"

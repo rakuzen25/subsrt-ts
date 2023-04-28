@@ -42,4 +42,10 @@ jobs:
                   prettier: true
 
             - name: Run tests
-              run: yarn test
+              run: yarn testCoverage
+
+            - name: Report test coverage to DeepSource
+              run: |
+                  curl https://deepsource.io/cli | sh
+
+                  ./bin/deepsource report --analyzer test-coverage --key javascript --value-file ./coverage/cobertura-coverage.xml
