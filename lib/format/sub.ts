@@ -8,6 +8,9 @@ const DEFAULT_FPS = 25;
 
 /**
  * Parses captions in MicroDVD format.
+ * @param content The subtitle content
+ * @param options Parse options
+ * @returns Parsed captions
  * @see https://en.wikipedia.org/wiki/MicroDVD
  */
 const parse = (content: string, options: SUBParseOptions) => {
@@ -24,9 +27,9 @@ const parse = (content: string, options: SUBParseOptions) => {
             caption.type = "caption";
             caption.index = i + 1;
             caption.frame = {
-                start: parseInt(match[1]),
-                end: parseInt(match[2]),
-                count: parseInt(match[2]) - parseInt(match[1]),
+                start: parseInt(match[1], 10),
+                end: parseInt(match[2], 10),
+                count: parseInt(match[2]) - parseInt(match[1], 10),
             };
             caption.start = Math.round(caption.frame.start / fps);
             caption.end = Math.round(caption.frame.end / fps);
@@ -39,7 +42,7 @@ const parse = (content: string, options: SUBParseOptions) => {
         }
 
         if (options.verbose) {
-            console.log("WARN: Unknown part", parts[i]);
+            console.warn("Unknown part", parts[i]);
         }
     }
     return captions;
@@ -47,6 +50,9 @@ const parse = (content: string, options: SUBParseOptions) => {
 
 /**
  * Builds captions in MicroDVD format.
+ * @param captions The captions to build
+ * @param options Build options
+ * @returns The built captions string in MicroDVD format
  * @see https://en.wikipedia.org/wiki/MicroDVD
  */
 const build = (captions: Caption[], options: SUBBuildOptions) => {
@@ -54,13 +60,12 @@ const build = (captions: Caption[], options: SUBBuildOptions) => {
 
     let sub = "";
     const eol = options.eol || "\r\n";
-    for (let i = 0; i < captions.length; i++) {
-        const caption = captions[i];
+    for (const caption of captions) {
         if (!caption.type || caption.type === "caption") {
             const startFrame = typeof caption.frame === "object" && caption.frame.start >= 0 ? caption.frame.start : caption.start * fps;
             const endFrame = typeof caption.frame === "object" && caption.frame.end >= 0 ? caption.frame.end : caption.end * fps;
             const text = caption.text.replace(/\r?\n/, "|");
-            sub += `{${startFrame}}` + `{${endFrame}}${text}${eol}`;
+            sub += `{${startFrame}}{${endFrame}}${text}${eol}`;
             continue;
         }
 
@@ -73,7 +78,9 @@ const build = (captions: Caption[], options: SUBBuildOptions) => {
 };
 
 /**
- * Detects a subtitle format from the content.
+ * Detects whether the content is in MicroDVD format.
+ * @param content The subtitle content
+ * @returns Whether it's MicroDVD format
  */
 const detect = (content: string) => {
     /*

@@ -4,18 +4,29 @@ import { BuildOptions, Caption, ContentCaption, MetaCaption, ParseOptions, Style
 const FORMAT_NAME = "ssa";
 
 const helper = {
+    /**
+     * Converts a time string in format of hh:mm:ss.fff or hh:mm:ss,fff to milliseconds.
+     * @param s The time string to convert
+     * @throws {TypeError} If the time string is invalid
+     * @returns Milliseconds
+     */
     toMilliseconds: (s: string) => {
         const match = /^\s*(\d+:)?(\d{1,2}):(\d{1,2})(?:[.,](\d{1,3}))?\s*$/.exec(s);
         if (!match) {
-            throw new Error(`Invalid time format: ${s}`);
+            throw new TypeError(`Invalid time format: ${s}`);
         }
         const hh = match[1] ? parseInt(match[1].replace(":", "")) : 0;
-        const mm = parseInt(match[2]);
-        const ss = parseInt(match[3]);
-        const ff = match[4] ? parseInt(match[4]) : 0;
+        const mm = parseInt(match[2], 10);
+        const ss = parseInt(match[3], 10);
+        const ff = match[4] ? parseInt(match[4], 10) : 0;
         const ms = hh * 3600 * 1000 + mm * 60 * 1000 + ss * 1000 + ff * 10;
         return ms;
     },
+    /**
+     * Converts milliseconds to a time string in format of hh:mm:ss.fff.
+     * @param ms Milliseconds
+     * @returns Time string in format of hh:mm:ss.fff
+     */
     toTimeString: (ms: number) => {
         const hh = Math.floor(ms / 1000 / 3600);
         const mm = Math.floor((ms / 1000 / 60) % 60);
@@ -27,7 +38,28 @@ const helper = {
 };
 
 /**
+ * Internal helper function for building caption data.
+ * @param columns Columns
+ * @param values Values
+ * @returns Caption data
+ * @private
+ */
+const _buildCaptionData = (columns: string[], values: string[]) => {
+    const data: {
+        [key: string]: string;
+    } = {};
+    for (let c = 0; c < columns.length && c < values.length; c++) {
+        data[columns[c]] = values[c];
+    }
+    return data;
+};
+
+/**
  * Parses captions in SubStation Alpha format (.ssa).
+ * @param content The subtitle content
+ * @param options Parse options
+ * @throws {TypeError} If the meta data is in invalid format
+ * @returns Parsed captions
  */
 const parse = (content: string, options: ParseOptions) => {
     let meta;
@@ -35,21 +67,20 @@ const parse = (content: string, options: ParseOptions) => {
     const captions = [];
     const eol = options.eol || "\r\n";
     const parts = content.split(/\r?\n\s*\n/);
-    for (let i = 0; i < parts.length; i++) {
+    for (const part of parts) {
         const regex = /^\s*\[([^\]]+)\]\r?\n([\s\S]*)$/;
-        const match = regex.exec(parts[i]);
+        const match = regex.exec(part);
         if (match) {
             const tag = match[1];
             const lines = match[2].split(/\r?\n/);
-            for (let l = 0; l < lines.length; l++) {
-                const line = lines[l];
+            for (const line of lines) {
                 if (/^\s*;/.test(line)) {
                     continue; // Skip comment
                 }
                 // FIXME: prevent backtracking
                 // eslint-disable-next-line regexp/no-super-linear-backtracking
-                const m = /^\s*([^\s:]+):\s*(.*)$/.exec(line);
-                if (!m) {
+                const lineMatch = /^\s*([^\s:]+):\s*(.*)$/.exec(line);
+                if (!lineMatch) {
                     continue;
                 }
                 if (tag === "Script Info") {
@@ -60,51 +91,41 @@ const parse = (content: string, options: ParseOptions) => {
                         captions.push(meta);
                     }
                     if (typeof meta.data === "object") {
-                        const name = m[1].trim();
-                        const value = m[2].trim();
+                        const name = lineMatch[1].trim();
+                        const value = lineMatch[2].trim();
                         meta.data[name] = value;
                     } else {
-                        throw new Error(`Invalid meta data: ${line}`);
+                        throw new TypeError(`Invalid meta data: ${line}`);
                     }
                 } else if (tag === "V4 Styles" || tag === "V4+ Styles") {
-                    const name = m[1].trim();
-                    const value = m[2].trim();
+                    const name = lineMatch[1].trim();
+                    const value = lineMatch[2].trim();
                     if (name === "Format") {
                         columns = value.split(/\s*,\s*/g);
                     } else if (name === "Style" && columns) {
                         const values = value.split(/\s*,\s*/g);
                         const caption = <StyleCaption>{};
                         caption.type = "style";
-                        caption.data = {};
-                        for (let c = 0; c < columns.length && c < values.length; c++) {
-                            caption.data[columns[c]] = values[c];
-                        }
+                        caption.data = _buildCaptionData(columns, values);
                         captions.push(caption);
                     }
                 } else if (tag === "Events") {
-                    const name = m[1].trim();
-                    const value = m[2].trim();
+                    const name = lineMatch[1].trim();
+                    const value = lineMatch[2].trim();
                     if (name === "Format") {
                         columns = value.split(/\s*,\s*/g);
                     } else if (name === "Dialogue" && columns) {
                         const values = value.split(/\s*,\s*/g);
                         const caption = <ContentCaption>{};
                         caption.type = "caption";
-                        caption.data = {};
-                        for (let c = 0; c < columns.length && c < values.length; c++) {
-                            caption.data[columns[c]] = values[c];
-                        }
+                        caption.data = _buildCaptionData(columns, values);
                         caption.start = helper.toMilliseconds(caption.data.Start);
                         caption.end = helper.toMilliseconds(caption.data.End);
                         caption.duration = caption.end - caption.start;
                         caption.content = caption.data.Text;
 
                         // Work-around for missing text (when the text contains ',' char)
-                        const getPosition = (s: string, search: string, index: number) => {
-                            return s.split(search, index).join(search).length;
-                        };
-
-                        const indexOfText = getPosition(value, ",", columns.length - 1) + 1;
+                        const indexOfText = value.split(",", columns.length - 1).join(",").length + 1 + 1;
                         caption.content = value.substring(indexOfText);
                         caption.data.Text = caption.content;
 
@@ -118,7 +139,7 @@ const parse = (content: string, options: ParseOptions) => {
         }
 
         if (options.verbose) {
-            console.log("WARN: Unknown part", parts[i]);
+            console.warn("Unknown part", part);
         }
     }
     return captions;
@@ -126,6 +147,9 @@ const parse = (content: string, options: ParseOptions) => {
 
 /**
  * Builds captions in SubStation Alpha format (.ssa).
+ * @param captions The captions to build
+ * @param options Build options
+ * @returns The built captions string in SubStation Alpha format
  */
 const build = (captions: Caption[], options: BuildOptions) => {
     const eol = options.eol || "\r\n";
@@ -150,8 +174,7 @@ const build = (captions: Caption[], options: BuildOptions) => {
     content += `[Events]${eol}`;
     content += `Format: ${ass ? "Layer" : "Marked"}, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text${eol}`;
 
-    for (let i = 0; i < captions.length; i++) {
-        const caption = captions[i];
+    for (const caption of captions) {
         if (caption.type === "meta") {
             continue;
         }
@@ -172,7 +195,9 @@ const build = (captions: Caption[], options: BuildOptions) => {
 };
 
 /**
- * Detects a subtitle format from the content.
+ * Detects whether the content is in ASS or SSA format.
+ * @param content The subtitle content
+ * @returns Whether the content is in "ass", "ssa" or neither
  */
 const detect = (content: string) => {
     if (/^\s*\[Script Info\]\r?\n/.test(content) && /\s*\[Events\]\r?\n/.test(content)) {

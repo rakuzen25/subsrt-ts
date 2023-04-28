@@ -2,24 +2,34 @@ import formats from "./format/index.js";
 import { BuildOptions, Caption, ConvertOptions, ParseOptions, ResyncOptions } from "./types/handler.js";
 import { ResyncFunction, SubsrtInterface } from "./types/subsrt.js";
 
-const clone = (obj: object) => JSON.parse(JSON.stringify(obj));
+/**
+ * Clones an object.
+ * @param obj The object to clone
+ * @returns The cloned object
+ */
+const clone = <T>(obj: T): T => JSON.parse(JSON.stringify(obj));
 
+/**
+ * Main subsrt class.
+ */
 class Subsrt implements SubsrtInterface {
     format = formats;
 
     /**
      * Gets a list of supported subtitle formats.
+     * @returns The list of supported subtitle formats
      */
     list = () => Object.keys(this.format);
 
     /**
      * Detects a subtitle format from the content.
+     * @param content The subtitle content
+     * @returns The detected format
      */
     detect = (content: string) => {
         const formats = this.list();
-        for (let i = 0; i < formats.length; i++) {
-            const f = formats[i];
-            const handler = this.format[f];
+        for (const format of formats) {
+            const handler = this.format[format];
             if (typeof handler === "undefined") {
                 continue;
             }
@@ -27,9 +37,9 @@ class Subsrt implements SubsrtInterface {
                 continue;
             }
             // Function 'detect' can return true or format name
-            const d = handler.detect(content);
-            if (d === true || d === f) {
-                return f;
+            const detected = handler.detect(content);
+            if (detected === true || detected === format) {
+                return format;
             }
         }
         return "";
@@ -37,21 +47,27 @@ class Subsrt implements SubsrtInterface {
 
     /**
      * Parses a subtitle content.
+     * @param content The subtitle content
+     * @param options The parsing options
+     * @throws {TypeError} If the format cannot be determined
+     * @throws {TypeError} If the format is not supported
+     * @throws {TypeError} If the handler does not support 'parse' op
+     * @returns The parsed captions
      */
     parse = (content: string, options = <ParseOptions>{}) => {
         const format = options.format || this.detect(content);
         if (!format || format.trim().length === 0) {
-            throw new Error("Cannot determine subtitle format!");
+            throw new TypeError("Cannot determine subtitle format");
         }
 
         const handler = this.format[format];
         if (typeof handler === "undefined") {
-            throw new Error(`Unsupported subtitle format: ${format}`);
+            throw new TypeError(`Unsupported subtitle format: ${format}`);
         }
 
         const func = handler.parse;
         if (typeof func !== "function") {
-            throw new Error(`Subtitle format does not support 'parse' op: ${format}`);
+            throw new TypeError(`Subtitle format does not support 'parse' op: ${format}`);
         }
 
         return func(content, options);
@@ -59,21 +75,27 @@ class Subsrt implements SubsrtInterface {
 
     /**
      * Builds a subtitle content.
+     * @param captions The captions to build
+     * @param options The building options
+     * @throws {TypeError} If the format cannot be determined
+     * @throws {TypeError} If the format is not supported
+     * @throws {TypeError} If the handler does not support 'build' op
+     * @returns The built subtitle content
      */
     build = (captions: Caption[], options = <BuildOptions>{}) => {
         const format = options.format || "srt";
         if (!format || format.trim().length === 0) {
-            throw new Error("Cannot determine subtitle format!");
+            throw new TypeError("Cannot determine subtitle format");
         }
 
         const handler = this.format[format];
         if (typeof handler === "undefined") {
-            throw new Error(`Unsupported subtitle format: ${format}`);
+            throw new TypeError(`Unsupported subtitle format: ${format}`);
         }
 
         const func = handler.build;
         if (typeof func !== "function") {
-            throw new Error(`Subtitle format does not support 'build' op: ${format}`);
+            throw new TypeError(`Subtitle format does not support 'build' op: ${format}`);
         }
 
         return func(captions, options);
@@ -81,6 +103,9 @@ class Subsrt implements SubsrtInterface {
 
     /**
      * Converts subtitle format.
+     * @param content The subtitle content
+     * @param options The conversion options
+     * @returns The converted subtitle content
      */
     convert = (content: string, _options: ConvertOptions | string = <ConvertOptions>{}) => {
         let options = <ConvertOptions>{};
@@ -113,7 +138,12 @@ class Subsrt implements SubsrtInterface {
 
     /**
      * Shifts the time of the captions.
+     * @param captions The captions to resync
+     * @param options The resync options
+     * @throws {TypeError} If the 'options' argument is not defined
+     * @returns The resynced captions
      */
+    // skipcq: JS-0105
     resync = (captions: Caption[], options: ResyncFunction | number | ResyncOptions = <ResyncOptions>{}) => {
         let func: ResyncFunction,
             ratio: number,
@@ -130,14 +160,14 @@ class Subsrt implements SubsrtInterface {
             frame = options.frame || false;
             func = (a) => [Math.round(a[0] * ratio + offset), Math.round(a[1] * ratio + offset)];
         } else {
-            throw new Error("Argument 'options' not defined!");
+            throw new TypeError("Argument 'options' not defined");
         }
 
         const resynced: Caption[] = [];
-        for (let i = 0; i < captions.length; i++) {
-            const caption = clone(captions[i]);
+        for (const _caption of captions) {
+            const caption = clone(_caption);
             if (!caption.type || caption.type === "caption") {
-                if (frame) {
+                if (frame && caption.frame) {
                     const shift = func([caption.frame.start, caption.frame.end]);
                     if (shift && shift.length === 2) {
                         caption.frame.start = shift[0];

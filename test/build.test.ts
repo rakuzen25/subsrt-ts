@@ -5,8 +5,7 @@ import { build, list } from "../lib/subsrt";
 describe("Build", () => {
     it("should build a subtitle file", () => {
         const formats = list();
-        for (let i = 0; i < formats.length; i++) {
-            const ext = formats[i];
+        for (const ext of formats) {
             console.log(`Build .${ext}`);
             const json = readFileSync("./test/fixtures/sample.json", "utf8");
             const captions = JSON.parse(json);

@@ -6,6 +6,11 @@ import { SMIBuildOptions, SMIParseOptions } from "./types/smi.js";
 const FORMAT_NAME = "smi";
 
 const helper = {
+    /**
+     * Encodes a string to be used in XML.
+     * @param text - The text to be encoded
+     * @returns The HTML-encoded string
+     */
     htmlEncode: (text: string) =>
         text
             .replace(/&/g, "&amp;")
@@ -15,6 +20,12 @@ const helper = {
             .replace(/>/g, "&gt;")
             //.replace(/\s/g, '&nbsp;')
             .replace(/\r?\n/g, "<BR>"),
+    /**
+     * Decodes a string that has been HTML-encoded.
+     * @param html The HTML-encoded string to decode
+     * @param eol The end-of-line character to use
+     * @returns The decoded string
+     */
     htmlDecode: (html: string, eol: string) =>
         html
             .replace(/<BR\s*\/?>/gi, eol || "\r\n")
@@ -28,10 +39,14 @@ const helper = {
 
 /**
  * Parses captions in SAMI format (.smi).
+ * @param content The subtitle content
+ * @param options Parse options
+ * @throw {TypeError} When the format is not supported
+ * @returns Parsed captions
  */
 const parse = (content: string, options: SMIParseOptions) => {
     if (options.format && options.format !== FORMAT_NAME) {
-        throw new Error(`Invalid format: ${options.format}`);
+        throw new TypeError(`Invalid format: ${options.format}`);
     }
 
     const captions = [];
@@ -61,27 +76,27 @@ const parse = (content: string, options: SMIParseOptions) => {
 
     let prev = null;
     const parts = sami.split(/<SYNC/gi);
-    for (let i = 0; i < parts.length; i++) {
-        if (!parts[i] || parts[i].trim().length === 0) {
+    for (const _part of parts) {
+        if (!_part || _part.trim().length === 0) {
             continue;
         }
 
-        const part = `<SYNC${parts[i]}`;
+        const part = `<SYNC${_part}`;
 
         // <SYNC Start = 1000>
         const match = /^<SYNC[^>]+Start\s*=\s*["']?(\d+)[^\d>]*>([\s\S]*)/i.exec(part);
         if (match) {
             const caption = <ContentCaption>{};
             caption.type = "caption";
-            caption.start = parseInt(match[1]);
+            caption.start = parseInt(match[1], 10);
             caption.end = caption.start + 2000;
             caption.duration = caption.end - caption.start;
             caption.content = match[2].replace(/^<\/SYNC[^>]*>/gi, "");
 
             let blank = true;
-            const p = /^<P.+Class\s*=\s*["']?([\w-]+)(?: .*)?>([\s\S]*)/i.exec(caption.content) || /^<P([^>]*)>([\s\S]*)/i.exec(caption.content);
-            if (p) {
-                let html = p[2].replace(/<P[\s\S]+$/gi, ""); // Remove string after another <P> tag
+            const pMatch = /^<P.+Class\s*=\s*["']?([\w-]+)(?: .*)?>([\s\S]*)/i.exec(caption.content) || /^<P([^>]*)>([\s\S]*)/i.exec(caption.content);
+            if (pMatch) {
+                let html = pMatch[2].replace(/<P[\s\S]+$/gi, ""); // Remove string after another <P> tag
                 html = html
                     .replace(/<BR\s*\/?>\s+/gi, eol)
                     .replace(/<BR\s*\/?>/gi, eol)
@@ -109,7 +124,7 @@ const parse = (content: string, options: SMIParseOptions) => {
         }
 
         if (options.verbose) {
-            console.log("WARN: Unknown part", parts[i]);
+            console.warn("Unknown part", _part);
         }
     }
 
@@ -118,6 +133,9 @@ const parse = (content: string, options: SMIParseOptions) => {
 
 /**
  * Builds captions in SAMI format (.smi).
+ * @param captions The captions to build
+ * @param options Build options
+ * @returns The built captions string in SAMI format
  */
 const build = (captions: Caption[], options: SMIBuildOptions) => {
     const eol = options.eol || "\r\n";
@@ -135,8 +153,7 @@ const build = (captions: Caption[], options: SMIBuildOptions) => {
     content += `</HEAD>${eol}`;
     content += `<BODY>${eol}`;
 
-    for (let i = 0; i < captions.length; i++) {
-        const caption = captions[i];
+    for (const caption of captions) {
         if (caption.type === "meta") {
             continue;
         }
@@ -151,7 +168,7 @@ const build = (captions: Caption[], options: SMIBuildOptions) => {
 
             // Blank line indicates the end of caption
             content += `<SYNC Start=${caption.end}>${eol}`;
-            content += "  <P Class=LANG>" + `&nbsp;${options.closeTags ? "</P>" : ""}${eol}`;
+            content += `  <P Class=LANG>&nbsp;${options.closeTags ? "</P>" : ""}${eol}`;
             if (options.closeTags) {
                 content += `</SYNC>${eol}`;
             }
@@ -171,7 +188,9 @@ const build = (captions: Caption[], options: SMIBuildOptions) => {
 };
 
 /**
- * Detects a subtitle format from the content.
+ * Detects whether the content is in SAMI format.
+ * @param content The content to be detected
+ * @returns Whether the subtitle format is SAMI
  */
 const detect = (content: string) => {
     /*
