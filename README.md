@@ -19,7 +19,7 @@ Subtitle JavaScript library and command line tool with no dependencies.
 
 This is a rewrite of the original [subsrt](https://www.npmjs.com/package/subsrt) package in TypeScript and using ESM syntax.
 
-<details>
+<details open>
     <summary>Table of Contents</summary>
     <ol>
         <li><a href="#getting-started">Getting started</a></li>
