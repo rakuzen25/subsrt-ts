@@ -1,10 +1,49 @@
+<!-- markdownlint-disable html -->
+
 # subsrt-ts
+
+<a name="readme-top"></a>
+
+[![npm](https://img.shields.io/npm/v/subsrt-ts?logo=npm)](https://www.npmjs.com/package/subsrt-ts)
+[![npm](https://img.shields.io/npm/dt/subsrt-ts?logo=npm)](https://www.npmjs.com/package/subsrt-ts)
+[![Linting](https://img.shields.io/github/actions/workflow/status/leranjun/subsrt-ts/lint-and-test.yml?label=Lint%20and%20test&logo=github)](https://github.com/leranjun/subsrt-ts/actions/workflows/lint-and-test.yml)
+[![DeepSource](https://app.deepsource.com/gh/leranjun/subsrt-ts.svg/?label=active+issues&show_trend=true&token=VSYfXgJAchNJCwJhEqwVhMlh)](https://app.deepsource.com/gh/leranjun/subsrt-ts/?ref=repository-badge)
+
+<p align="center">
+<a href="https://leranjun.github.io/subsrt-ts/"><strong>Docs</strong></a>
+·
+<a href="https://www.npmjs.com/package/subsrt-ts">npm package</a>
+</p>
 
 Subtitle JavaScript library and command line tool with no dependencies.
 
 This is a rewrite of the original [subsrt](https://www.npmjs.com/package/subsrt) package in TypeScript and using ESM syntax.
 
-## Getting Started
+<details>
+    <summary>Table of Contents</summary>
+    <ol>
+        <li><a href="#getting-started">Getting started</a></li>
+        <li><a href="#supported-subtitle-formats">Supported subtitle formats</a></li>
+        <li><a href="#command-line-arguments">Command line arguments</a></li>
+        <li>
+            <a href="#using-in-javascript">Using in JavaScript</a>
+            <ul>
+                <li><a href="#list-supported-formats">List supported formats</a></li>
+                <li><a href="#detect">Detect</a></li>
+                <li><a href="#parse">Parse</a></li>
+                <li><a href="#build">Build</a></li>
+                <li><a href="#convert">Convert</a></li>
+                <li><a href="#timeshift---offset">Timeshift (+/- offset)</a></li>
+                <li><a href="#change-fps">Change FPS</a></li>
+                <li><a href="#advanced-resync-options">Advanced resync options</a></li>
+            </ul>
+        </li>
+        <li><a href="#source-code">Source code</a></li>
+        <li><a href="#license">License</a></li>
+    </ol>
+</details>
+
+## Getting started
 
 Install the module
 
@@ -31,6 +70,8 @@ const sub = "{14975}{104000}Hi, my name is...";
 const srt = subsrt.convert(sub, { format: "srt", fps: 25 });
 ```
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ## Supported subtitle formats
 
 -   [MicroDVD SUB](https://en.wikipedia.org/wiki/MicroDVD) (.sub)
@@ -42,7 +83,9 @@ const srt = subsrt.convert(sub, { format: "srt", fps: 25 });
 -   [LRC](https://en.wikipedia.org/wiki/LRC_%28file_format%29) (.lrc) aka LyRiCs
 -   JSON (.json)
 
-## Command Line Arguments
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Command line arguments
 
 ```text
 Usage:
@@ -77,6 +120,8 @@ Examples:
   subsrt resync --offset +3000 input.srt output.srt
   subsrt resync --fps 25-30 input.sub output.sub
 ```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Using in JavaScript
 
@@ -129,6 +174,8 @@ subsrt.format.my = {
 };
 ```
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ### Detect
 
 Recognizes format by content
@@ -144,6 +191,8 @@ content += "Okay, so we have all the ingredients laid out here" + "\r\n";
 const format = subsrt.detect(content);
 // format = "srt"
 ```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Parse
 
@@ -199,6 +248,8 @@ List of options
 -   `fps`: frames per second, `sub` format only
 -   `preserveSpaces`: keep white space lines, `smi` format only
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ### Build
 
 Build a subtitle file
@@ -237,6 +288,8 @@ List of options
 -   `fps`: frames per second, `sub` format only
 -   `closeTags`: set to true to close tags, `smi` format only
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ### Convert
 
 Using a single action to convert from one to another subtitle format
@@ -264,6 +317,8 @@ List of options
 -   `fps`: frames per second, `sub` format only
 -   `resync`: resync options, see below
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ### Timeshift (+/- offset)
 
 An example to make an extra 3-second delay
@@ -287,6 +342,8 @@ Use minus sign to display captions earlier
 const resynced = subsrt.resync(captions, { offset: -3000 });
 ```
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ### Change FPS
 
 The .sub format has captions saved in frame units. To shift from 25 FPS to 30 FPS do the following
@@ -304,6 +361,8 @@ const captions = subsrt.parse(content, { fps: 25 }); // The .sub file content is
 const resynced = subsrt.resync(content, { ratio: 30 / 25, frame: true });
 ```
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ### Advanced resync options
 
 Extend caption duration by 500 ms
@@ -314,21 +373,28 @@ Extend caption duration by 500 ms
 const resynced = subsrt.resync(content, (a) => [a[0], a[1] + 500]);
 ```
 
-## Source Code
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Source code
 
 Download the source code from the GitHub repository.
 
 Install required packages if any
 
 ```console
-npm install
+yarn install
 ```
 
 Run the unit tests
 
 ```console
-npm test
+yarn test
 ```
 
-Optionally create a folder `output` in the `test` folder before running the tests.
-This will allow you to view the generated content.
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## License
+
+Distributed under the MIT License. See [LICENSE.txt](LICENSE.txt) for more information.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
