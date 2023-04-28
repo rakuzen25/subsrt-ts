@@ -4,18 +4,29 @@ import { BuildOptions, Caption, ContentCaption, ParseOptions } from "../types/ha
 const FORMAT_NAME = "srt";
 
 const helper = {
+    /**
+     * Converts a time string in format of hh:mm:ss, hh:mm:ss.sss or hh:mm:ss,sss to milliseconds.
+     * @param s The time string to convert
+     * @throws {TypeError} If the time string is invalid
+     * @returns Milliseconds
+     */
     toMilliseconds: (s: string) => {
         const match = /^\s*(\d{1,2}):(\d{1,2}):(\d{1,2})(?:[.,](\d{1,3}))?\s*$/.exec(s);
         if (!match) {
-            throw new Error(`Invalid time format: ${s}`);
+            throw new TypeError(`Invalid time format: ${s}`);
         }
-        const hh = parseInt(match[1]);
-        const mm = parseInt(match[2]);
-        const ss = parseInt(match[3]);
-        const ff = match[4] ? parseInt(match[4]) : 0;
+        const hh = parseInt(match[1], 10);
+        const mm = parseInt(match[2], 10);
+        const ss = parseInt(match[3], 10);
+        const ff = match[4] ? parseInt(match[4], 10) : 0;
         const ms = hh * 3600 * 1000 + mm * 60 * 1000 + ss * 1000 + ff;
         return ms;
     },
+    /**
+     * Converts milliseconds to a time string in format of hh:mm:ss,sss.
+     * @param ms Milliseconds
+     * @returns Time string in format of hh:mm:ss,sss
+     */
     toTimeString: (ms: number) => {
         const hh = Math.floor(ms / 1000 / 3600);
         const mm = Math.floor((ms / 1000 / 60) % 60);
@@ -30,6 +41,9 @@ const helper = {
 
 /**
  * Parses captions in SubRip format (.srt).
+ * @param content The subtitle content
+ * @param options Parse options
+ * @returns Parsed captions
  */
 const parse = (content: string, options: ParseOptions) => {
     const captions = [];
@@ -41,7 +55,7 @@ const parse = (content: string, options: ParseOptions) => {
         if (match) {
             const caption = <ContentCaption>{};
             caption.type = "caption";
-            caption.index = parseInt(match[1]);
+            caption.index = parseInt(match[1], 10);
             caption.start = helper.toMilliseconds(match[2]);
             caption.end = helper.toMilliseconds(match[3]);
             caption.duration = caption.end - caption.start;
@@ -64,6 +78,9 @@ const parse = (content: string, options: ParseOptions) => {
 
 /**
  * Builds captions in SubRip format (.srt).
+ * @param captions The captions to build
+ * @param options Build options
+ * @returns The built captions string in SubRip format
  */
 const build = (captions: Caption[], options: BuildOptions) => {
     let srt = "";
@@ -86,7 +103,9 @@ const build = (captions: Caption[], options: BuildOptions) => {
 };
 
 /**
- * Detects a subtitle format from the content.
+ * Detects whether the content is in SubRip format.
+ * @param content The subtitle content
+ * @returns Whether the content is in SubRip format
  */
 const detect = (content: string) => {
     /*

@@ -49,22 +49,25 @@ class Subsrt implements SubsrtInterface {
      * Parses a subtitle content.
      * @param content The subtitle content
      * @param options The parsing options
+     * @throws {TypeError} If the format cannot be determined
+     * @throws {TypeError} If the format is not supported
+     * @throws {TypeError} If the handler does not support 'parse' op
      * @returns The parsed captions
      */
     parse = (content: string, options = <ParseOptions>{}) => {
         const format = options.format || this.detect(content);
         if (!format || format.trim().length === 0) {
-            throw new Error("Cannot determine subtitle format!");
+            throw new TypeError("Cannot determine subtitle format");
         }
 
         const handler = this.format[format];
         if (typeof handler === "undefined") {
-            throw new Error(`Unsupported subtitle format: ${format}`);
+            throw new TypeError(`Unsupported subtitle format: ${format}`);
         }
 
         const func = handler.parse;
         if (typeof func !== "function") {
-            throw new Error(`Subtitle format does not support 'parse' op: ${format}`);
+            throw new TypeError(`Subtitle format does not support 'parse' op: ${format}`);
         }
 
         return func(content, options);
@@ -74,22 +77,25 @@ class Subsrt implements SubsrtInterface {
      * Builds a subtitle content.
      * @param captions The captions to build
      * @param options The building options
+     * @throws {TypeError} If the format cannot be determined
+     * @throws {TypeError} If the format is not supported
+     * @throws {TypeError} If the handler does not support 'build' op
      * @returns The built subtitle content
      */
     build = (captions: Caption[], options = <BuildOptions>{}) => {
         const format = options.format || "srt";
         if (!format || format.trim().length === 0) {
-            throw new Error("Cannot determine subtitle format!");
+            throw new TypeError("Cannot determine subtitle format");
         }
 
         const handler = this.format[format];
         if (typeof handler === "undefined") {
-            throw new Error(`Unsupported subtitle format: ${format}`);
+            throw new TypeError(`Unsupported subtitle format: ${format}`);
         }
 
         const func = handler.build;
         if (typeof func !== "function") {
-            throw new Error(`Subtitle format does not support 'build' op: ${format}`);
+            throw new TypeError(`Subtitle format does not support 'build' op: ${format}`);
         }
 
         return func(captions, options);
@@ -134,6 +140,7 @@ class Subsrt implements SubsrtInterface {
      * Shifts the time of the captions.
      * @param captions The captions to resync
      * @param options The resync options
+     * @throws {TypeError} If the 'options' argument is not defined
      * @returns The resynced captions
      */
     // skipcq: JS-0105
@@ -153,7 +160,7 @@ class Subsrt implements SubsrtInterface {
             frame = options.frame || false;
             func = (a) => [Math.round(a[0] * ratio + offset), Math.round(a[1] * ratio + offset)];
         } else {
-            throw new Error("Argument 'options' not defined!");
+            throw new TypeError("Argument 'options' not defined");
         }
 
         const resynced: Caption[] = [];

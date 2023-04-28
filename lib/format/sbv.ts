@@ -4,18 +4,30 @@ import { BuildOptions, Caption, ContentCaption, ParseOptions } from "../types/ha
 const FORMAT_NAME = "sbv";
 
 const helper = {
+    /**
+     * Converts a time string in format of hh:mm:ss.sss or hh:mm:ss,sss to milliseconds.
+     * @param s The time string to convert
+     * @throws {TypeError} If the time string is invalid
+     * @returns Milliseconds
+     */
     toMilliseconds: (s: string) => {
         const match = /^\s*(\d{1,2}):(\d{1,2}):(\d{1,2})(?:[.,](\d{1,3}))?\s*$/.exec(s);
         if (!match) {
-            throw new Error(`Invalid time format: ${s}`);
+            throw new TypeError(`Invalid time format: ${s}`);
         }
-        const hh = parseInt(match[1]);
-        const mm = parseInt(match[2]);
-        const ss = parseInt(match[3]);
-        const ff = match[4] ? parseInt(match[4]) : 0;
+        const hh = parseInt(match[1], 10);
+        const mm = parseInt(match[2], 10);
+        const ss = parseInt(match[3], 10);
+        const ff = match[4] ? parseInt(match[4], 10) : 0;
         const ms = hh * 3600 * 1000 + mm * 60 * 1000 + ss * 1000 + ff;
         return ms;
     },
+
+    /**
+     * Converts milliseconds to a time string in format of hh:mm:ss.sss.
+     * @param ms Milliseconds
+     * @returns Time string in format of hh:mm:ss.sss
+     */
     toTimeString: (ms: number) => {
         const hh = Math.floor(ms / 1000 / 3600);
         const mm = Math.floor((ms / 1000 / 60) % 60);
@@ -30,6 +42,9 @@ const helper = {
 
 /**
  * Parses captions in SubViewer format (.sbv).
+ * @param content The subtitle content
+ * @param options Parse options
+ * @returns Parsed captions
  */
 const parse = (content: string, options: ParseOptions) => {
     const captions = [];
@@ -60,6 +75,9 @@ const parse = (content: string, options: ParseOptions) => {
 
 /**
  * Builds captions in SubViewer format (.sbv).
+ * @param captions The captions to build
+ * @param options Build options
+ * @returns The built captions string in SubViewer format
  */
 const build = (captions: Caption[], options: BuildOptions) => {
     let content = "";
@@ -80,7 +98,9 @@ const build = (captions: Caption[], options: BuildOptions) => {
 };
 
 /**
- * Detects a subtitle format from the content.
+ * Detects whether the content is in SubViewer format.
+ * @param content The subtitle content
+ * @returns Whether the subtitle format is SubViewer
  */
 const detect = (content: string) => {
     /*

@@ -4,17 +4,28 @@ import { BuildOptions, Caption, ContentCaption, MetaCaption, ParseOptions } from
 const FORMAT_NAME = "lrc";
 
 const helper = {
+    /**
+     * Converts a time string in format of mm:ss.ff or mm:ss,ff to milliseconds.
+     * @param s The time string to convert
+     * @throws {TypeError} If the time string is invalid
+     * @returns Milliseconds
+     */
     toMilliseconds: (s: string) => {
         const match = /^\s*(\d+):(\d{1,2})(?:[.,](\d{1,3}))?\s*$/.exec(s);
         if (!match) {
-            throw new Error(`Invalid time format: ${s}`);
+            throw new TypeError(`Invalid time format: ${s}`);
         }
-        const mm = parseInt(match[1]);
-        const ss = parseInt(match[2]);
-        const ff = match[3] ? parseInt(match[3]) : 0;
+        const mm = parseInt(match[1], 10);
+        const ss = parseInt(match[2], 10);
+        const ff = match[3] ? parseInt(match[3], 10) : 0;
         const ms = mm * 60 * 1000 + ss * 1000 + ff * 10;
         return ms;
     },
+    /**
+     * Converts milliseconds to a time string in format of mm:ss.ff.
+     * @param ms Milliseconds
+     * @returns Time string in format of mm:ss.ff
+     */
     toTimeString: (ms: number) => {
         const mm = Math.floor(ms / 1000 / 60);
         const ss = Math.floor((ms / 1000) % 60);
@@ -26,6 +37,9 @@ const helper = {
 
 /**
  * Parses captions in LRC format.
+ * @param content The subtitle content
+ * @param options Parse options
+ * @returns Parsed captions
  * @see https://en.wikipedia.org/wiki/LRC_%28file_format%29
  */
 const parse = (content: string, options: ParseOptions) => {
@@ -81,7 +95,10 @@ const parse = (content: string, options: ParseOptions) => {
 };
 
 /**
- * Builds captions in LRC format
+ * Builds captions in LRC format.
+ * @param captions The captions to build
+ * @param options Build options
+ * @returns The built captions string in LRC format
  * @see https://en.wikipedia.org/wiki/LRC_%28file_format%29
  */
 const build = (captions: Caption[], options: BuildOptions) => {
@@ -114,7 +131,9 @@ const build = (captions: Caption[], options: BuildOptions) => {
 };
 
 /**
- * Detects a subtitle format from the content.
+ * Detects whether the content is in LRC format.
+ * @param content The subtitle content
+ * @returns Format name if detected, or null if not detected
  */
 const detect = (content: string) => {
     /*

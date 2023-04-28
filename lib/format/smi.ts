@@ -6,6 +6,11 @@ import { SMIBuildOptions, SMIParseOptions } from "./types/smi.js";
 const FORMAT_NAME = "smi";
 
 const helper = {
+    /**
+     * Encodes a string to be used in XML.
+     * @param text - The text to be encoded
+     * @returns The HTML-encoded string
+     */
     htmlEncode: (text: string) =>
         text
             .replace(/&/g, "&amp;")
@@ -15,6 +20,12 @@ const helper = {
             .replace(/>/g, "&gt;")
             //.replace(/\s/g, '&nbsp;')
             .replace(/\r?\n/g, "<BR>"),
+    /**
+     * Decodes a string that has been HTML-encoded.
+     * @param html The HTML-encoded string to decode
+     * @param eol The end-of-line character to use
+     * @returns The decoded string
+     */
     htmlDecode: (html: string, eol: string) =>
         html
             .replace(/<BR\s*\/?>/gi, eol || "\r\n")
@@ -28,10 +39,14 @@ const helper = {
 
 /**
  * Parses captions in SAMI format (.smi).
+ * @param content The subtitle content
+ * @param options Parse options
+ * @throw {TypeError} When the format is not supported
+ * @returns Parsed captions
  */
 const parse = (content: string, options: SMIParseOptions) => {
     if (options.format && options.format !== FORMAT_NAME) {
-        throw new Error(`Invalid format: ${options.format}`);
+        throw new TypeError(`Invalid format: ${options.format}`);
     }
 
     const captions = [];
@@ -73,7 +88,7 @@ const parse = (content: string, options: SMIParseOptions) => {
         if (match) {
             const caption = <ContentCaption>{};
             caption.type = "caption";
-            caption.start = parseInt(match[1]);
+            caption.start = parseInt(match[1], 10);
             caption.end = caption.start + 2000;
             caption.duration = caption.end - caption.start;
             caption.content = match[2].replace(/^<\/SYNC[^>]*>/gi, "");
@@ -118,6 +133,9 @@ const parse = (content: string, options: SMIParseOptions) => {
 
 /**
  * Builds captions in SAMI format (.smi).
+ * @param captions The captions to build
+ * @param options Build options
+ * @returns The built captions string in SAMI format
  */
 const build = (captions: Caption[], options: SMIBuildOptions) => {
     const eol = options.eol || "\r\n";
@@ -170,7 +188,9 @@ const build = (captions: Caption[], options: SMIBuildOptions) => {
 };
 
 /**
- * Detects a subtitle format from the content.
+ * Detects whether the content is in SAMI format.
+ * @param content The content to be detected
+ * @returns Whether the subtitle format is SAMI
  */
 const detect = (content: string) => {
     /*
