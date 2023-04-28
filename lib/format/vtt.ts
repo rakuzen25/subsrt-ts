@@ -74,7 +74,7 @@ const parse = (content: string, options: ParseOptions) => {
         }
 
         if (options.verbose) {
-            console.log("WARN: Unknown part", part);
+            console.warn("Unknown part", part);
         }
     }
     return captions;
@@ -93,7 +93,7 @@ const build = (captions: Caption[], options: BuildOptions) => {
                 continue;
             }
             content += caption.name + eol;
-            content += caption.data ? caption.data + eol : "";
+            content += typeof caption.data === "string" ? caption.data + eol : "";
             content += eol;
             continue;
         }

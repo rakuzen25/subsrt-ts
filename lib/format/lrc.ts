@@ -33,14 +33,14 @@ const parse = (content: string, options: ParseOptions) => {
     const captions = [];
     // const eol = options.eol || "\r\n";
     const parts = content.split(/\r?\n/);
-    for (let i = 0; i < parts.length; i++) {
-        if (!parts[i] || parts[i].trim().length === 0) {
+    for (const part of parts) {
+        if (!part || part.trim().length === 0) {
             continue;
         }
 
         // LRC content
         const regex = /^\[(\d{1,2}:\d{1,2}(?:[.,]\d{1,3})?)\](.*)(?:\r?\n)*$/;
-        const match = regex.exec(parts[i]);
+        const match = regex.exec(part);
         if (match) {
             const caption = <ContentCaption>{};
             caption.type = "caption";
@@ -61,7 +61,7 @@ const parse = (content: string, options: ParseOptions) => {
         }
 
         // LRC meta
-        const meta = /^\[(\w+):([^\]]*)\](?:\r?\n)*$/.exec(parts[i]);
+        const meta = /^\[(\w+):([^\]]*)\](?:\r?\n)*$/.exec(part);
         if (meta) {
             const caption = <MetaCaption>{};
             caption.type = "meta";
@@ -74,7 +74,7 @@ const parse = (content: string, options: ParseOptions) => {
         }
 
         if (options.verbose) {
-            console.log("WARN: Unknown part", parts[i]);
+            console.warn("Unknown part", part);
         }
     }
     return captions;
@@ -88,8 +88,7 @@ const build = (captions: Caption[], options: BuildOptions) => {
     let content = "";
     let lyrics = false;
     const eol = options.eol || "\r\n";
-    for (let i = 0; i < captions.length; i++) {
-        const caption = captions[i];
+    for (const caption of captions) {
         if (caption.type === "meta") {
             if (caption.tag && caption.data && typeof caption.data === "string") {
                 content += `[${caption.tag}:${caption.data.replace(/[\r\n]+/g, " ")}]${eol}`;

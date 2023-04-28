@@ -35,21 +35,20 @@ const parse = (content: string, options: ParseOptions) => {
     const captions = [];
     const eol = options.eol || "\r\n";
     const parts = content.split(/\r?\n\s*\n/);
-    for (let i = 0; i < parts.length; i++) {
+    for (const part of parts) {
         const regex = /^\s*\[([^\]]+)\]\r?\n([\s\S]*)$/;
-        const match = regex.exec(parts[i]);
+        const match = regex.exec(part);
         if (match) {
             const tag = match[1];
             const lines = match[2].split(/\r?\n/);
-            for (let l = 0; l < lines.length; l++) {
-                const line = lines[l];
+            for (const line of lines) {
                 if (/^\s*;/.test(line)) {
                     continue; // Skip comment
                 }
                 // FIXME: prevent backtracking
                 // eslint-disable-next-line regexp/no-super-linear-backtracking
-                const m = /^\s*([^\s:]+):\s*(.*)$/.exec(line);
-                if (!m) {
+                const lineMatch = /^\s*([^\s:]+):\s*(.*)$/.exec(line);
+                if (!lineMatch) {
                     continue;
                 }
                 if (tag === "Script Info") {
@@ -60,15 +59,15 @@ const parse = (content: string, options: ParseOptions) => {
                         captions.push(meta);
                     }
                     if (typeof meta.data === "object") {
-                        const name = m[1].trim();
-                        const value = m[2].trim();
+                        const name = lineMatch[1].trim();
+                        const value = lineMatch[2].trim();
                         meta.data[name] = value;
                     } else {
                         throw new Error(`Invalid meta data: ${line}`);
                     }
                 } else if (tag === "V4 Styles" || tag === "V4+ Styles") {
-                    const name = m[1].trim();
-                    const value = m[2].trim();
+                    const name = lineMatch[1].trim();
+                    const value = lineMatch[2].trim();
                     if (name === "Format") {
                         columns = value.split(/\s*,\s*/g);
                     } else if (name === "Style" && columns) {
@@ -82,8 +81,8 @@ const parse = (content: string, options: ParseOptions) => {
                         captions.push(caption);
                     }
                 } else if (tag === "Events") {
-                    const name = m[1].trim();
-                    const value = m[2].trim();
+                    const name = lineMatch[1].trim();
+                    const value = lineMatch[2].trim();
                     if (name === "Format") {
                         columns = value.split(/\s*,\s*/g);
                     } else if (name === "Dialogue" && columns) {
@@ -118,7 +117,7 @@ const parse = (content: string, options: ParseOptions) => {
         }
 
         if (options.verbose) {
-            console.log("WARN: Unknown part", parts[i]);
+            console.warn("Unknown part", part);
         }
     }
     return captions;
@@ -150,8 +149,7 @@ const build = (captions: Caption[], options: BuildOptions) => {
     content += `[Events]${eol}`;
     content += `Format: ${ass ? "Layer" : "Marked"}, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text${eol}`;
 
-    for (let i = 0; i < captions.length; i++) {
-        const caption = captions[i];
+    for (const caption of captions) {
         if (caption.type === "meta") {
             continue;
         }

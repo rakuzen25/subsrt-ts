@@ -1,5 +1,8 @@
 import { BaseHandler, BuildFunction, DetectFunction, Helper, ParseFunction, ParseOptions } from "./types/handler.js";
 
+/**
+ * Handler class.
+ */
 export class Handler implements BaseHandler {
     name: string;
     helper?: Helper;
@@ -27,6 +30,11 @@ export class Handler implements BaseHandler {
     }
 }
 
+/**
+ * Build a handler
+ * @param args The handler properties
+ * @returns The handler
+ */
 export const buildHandler = (args: BaseHandler) => {
     return new Handler(args);
 };

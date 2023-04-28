@@ -61,12 +61,12 @@ const parse = (content: string, options: SMIParseOptions) => {
 
     let prev = null;
     const parts = sami.split(/<SYNC/gi);
-    for (let i = 0; i < parts.length; i++) {
-        if (!parts[i] || parts[i].trim().length === 0) {
+    for (const _part of parts) {
+        if (!_part || _part.trim().length === 0) {
             continue;
         }
 
-        const part = `<SYNC${parts[i]}`;
+        const part = `<SYNC${_part}`;
 
         // <SYNC Start = 1000>
         const match = /^<SYNC[^>]+Start\s*=\s*["']?(\d+)[^\d>]*>([\s\S]*)/i.exec(part);
@@ -79,9 +79,9 @@ const parse = (content: string, options: SMIParseOptions) => {
             caption.content = match[2].replace(/^<\/SYNC[^>]*>/gi, "");
 
             let blank = true;
-            const p = /^<P.+Class\s*=\s*["']?([\w-]+)(?: .*)?>([\s\S]*)/i.exec(caption.content) || /^<P([^>]*)>([\s\S]*)/i.exec(caption.content);
-            if (p) {
-                let html = p[2].replace(/<P[\s\S]+$/gi, ""); // Remove string after another <P> tag
+            const pMatch = /^<P.+Class\s*=\s*["']?([\w-]+)(?: .*)?>([\s\S]*)/i.exec(caption.content) || /^<P([^>]*)>([\s\S]*)/i.exec(caption.content);
+            if (pMatch) {
+                let html = pMatch[2].replace(/<P[\s\S]+$/gi, ""); // Remove string after another <P> tag
                 html = html
                     .replace(/<BR\s*\/?>\s+/gi, eol)
                     .replace(/<BR\s*\/?>/gi, eol)
@@ -109,7 +109,7 @@ const parse = (content: string, options: SMIParseOptions) => {
         }
 
         if (options.verbose) {
-            console.log("WARN: Unknown part", parts[i]);
+            console.warn("Unknown part", _part);
         }
     }
 
@@ -135,8 +135,7 @@ const build = (captions: Caption[], options: SMIBuildOptions) => {
     content += `</HEAD>${eol}`;
     content += `<BODY>${eol}`;
 
-    for (let i = 0; i < captions.length; i++) {
-        const caption = captions[i];
+    for (const caption of captions) {
         if (caption.type === "meta") {
             continue;
         }
@@ -151,7 +150,7 @@ const build = (captions: Caption[], options: SMIBuildOptions) => {
 
             // Blank line indicates the end of caption
             content += `<SYNC Start=${caption.end}>${eol}`;
-            content += "  <P Class=LANG>" + `&nbsp;${options.closeTags ? "</P>" : ""}${eol}`;
+            content += `  <P Class=LANG>&nbsp;${options.closeTags ? "</P>" : ""}${eol}`;
             if (options.closeTags) {
                 content += `</SYNC>${eol}`;
             }

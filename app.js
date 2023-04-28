@@ -8,79 +8,6 @@ const config = {
     verbose: process.env.NODE_VERBOSE === "true" || process.env.NODE_VERBOSE === "1",
 };
 
-// Command line arguments
-const args = process.argv.slice(2);
-for (let i = 0; i < args.length; i++) {
-    switch (args[i]) {
-        case "list":
-        case "parse":
-        case "build":
-        case "detect":
-        case "resync":
-        case "convert":
-            if (config.command) {
-                console.error(`Cannot run more than one command: ${args[i]}`);
-                process.exit(1);
-            }
-            config.command = args[i];
-            break;
-
-        case "--eol":
-            config.eol = args[++i];
-            if (config.eol) {
-                config.eol = config.eol.replace(/\\r/g, "\r").replace(/\\n/g, "\n");
-            }
-            break;
-
-        case "--fps": {
-            let fps = args[++i];
-            if (fps.indexOf("-") > 0) {
-                fps = fps.split("-");
-                config.fpsFrom = parseFloat(fps[0]);
-                config.fpsTo = parseFloat(fps[1]);
-            } else {
-                config.fps = parseFloat(fps);
-            }
-            break;
-        }
-
-        case "--offset":
-            config.offset = parseInt(args[++i]);
-            break;
-
-        case "--format":
-            config.format = args[++i];
-            break;
-
-        case "--help":
-            help();
-            process.exit(0);
-            break;
-
-        case "--verbose":
-            config.verbose = true;
-            break;
-
-        case "--version":
-            console.log((await import("./package.json")).version);
-            process.exit(0);
-            break;
-
-        default:
-            if (!config.src) {
-                config.src = args[i];
-                continue;
-            }
-            if (!config.dst) {
-                config.dst = args[i];
-                continue;
-            }
-            console.error(`Unknown command line argument: ${args[i]}`);
-            process.exit(1);
-            break;
-    }
-}
-
 // Prints help message
 const help = () => {
     console.log("Usage:");
@@ -115,6 +42,76 @@ const help = () => {
     console.log("  subsrt resync --offset +3000 input.srt output.srt");
     console.log("  subsrt resync --fps 25-30 input.sub output.sub");
 };
+
+// Command line arguments
+const args = process.argv.slice(2);
+for (let i = 0; i < args.length; i++) {
+    switch (args[i]) {
+        case "list":
+        case "parse":
+        case "build":
+        case "detect":
+        case "resync":
+        case "convert":
+            if (config.command) {
+                throw new Error(`Cannot run more than one command: ${args[i]}`);
+            }
+            config.command = args[i];
+            break;
+
+        case "--eol":
+            config.eol = args[++i];
+            if (config.eol) {
+                config.eol = config.eol.replace(/\\r/g, "\r").replace(/\\n/g, "\n");
+            }
+            break;
+
+        case "--fps": {
+            let fps = args[++i];
+            if (fps.indexOf("-") > 0) {
+                fps = fps.split("-");
+                config.fpsFrom = parseFloat(fps[0]);
+                config.fpsTo = parseFloat(fps[1]);
+            } else {
+                config.fps = parseFloat(fps);
+            }
+            break;
+        }
+
+        case "--offset":
+            config.offset = parseInt(args[++i], 10);
+            break;
+
+        case "--format":
+            config.format = args[++i];
+            break;
+
+        case "--help":
+            help();
+            config.exit = true;
+            break;
+
+        case "--verbose":
+            config.verbose = true;
+            break;
+
+        case "--version":
+            console.log((await import("./package.json")).version);
+            config.exit = true;
+            break;
+
+        default:
+            if (!config.src) {
+                config.src = args[i];
+                continue;
+            }
+            if (!config.dst) {
+                config.dst = args[i];
+                continue;
+            }
+            throw new Error(`Unknown command line argument: ${args[i]}`);
+    }
+}
 
 const commands = {
     list: () => {
@@ -218,9 +215,11 @@ const commands = {
     },
 };
 
-const func = commands[config.command];
-if (typeof func === "function") {
-    func();
-} else {
-    help();
+if (!config.exit) {
+    const func = commands[config.command];
+    if (typeof func === "function") {
+        func();
+    } else {
+        help();
+    }
 }

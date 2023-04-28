@@ -5,10 +5,11 @@ import { convert, detect, list, parse } from "../lib/subsrt";
 describe("Convert", () => {
     it("should convert a subtitle file", () => {
         const extensions = list();
-        for (let i = 0; i < extensions.length; i++) {
-            for (let j = 0; j < extensions.length; j++) {
-                const ext1 = extensions[i];
-                const ext2 = extensions[j];
+        for (const ext1 of extensions) {
+            for (const ext2 of extensions) {
+                if (ext1 === ext2) {
+                    continue;
+                }
 
                 console.log(`Convert .${ext1} to .${ext2}`);
 

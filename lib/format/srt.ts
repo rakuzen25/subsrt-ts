@@ -35,9 +35,9 @@ const parse = (content: string, options: ParseOptions) => {
     const captions = [];
     const eol = options.eol || "\r\n";
     const parts = content.split(/\r?\n\s*\n/g);
-    for (let i = 0; i < parts.length; i++) {
+    for (const part of parts) {
         const regex = /^(\d+)\r?\n(\d{1,2}:\d{1,2}:\d{1,2}(?:[.,]\d{1,3})?)\s*-->\s*(\d{1,2}:\d{1,2}:\d{1,2}(?:[.,]\d{1,3})?)\r?\n([\s\S]*)$/;
-        const match = regex.exec(parts[i]);
+        const match = regex.exec(part);
         if (match) {
             const caption = <ContentCaption>{};
             caption.type = "caption";
@@ -56,7 +56,7 @@ const parse = (content: string, options: ParseOptions) => {
         }
 
         if (options.verbose) {
-            console.log("WARN: Unknown part", parts[i]);
+            console.warn("Unknown part", part);
         }
     }
     return captions;

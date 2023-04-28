@@ -39,7 +39,7 @@ const parse = (content: string, options: SUBParseOptions) => {
         }
 
         if (options.verbose) {
-            console.log("WARN: Unknown part", parts[i]);
+            console.warn("Unknown part", parts[i]);
         }
     }
     return captions;
@@ -54,13 +54,12 @@ const build = (captions: Caption[], options: SUBBuildOptions) => {
 
     let sub = "";
     const eol = options.eol || "\r\n";
-    for (let i = 0; i < captions.length; i++) {
-        const caption = captions[i];
+    for (const caption of captions) {
         if (!caption.type || caption.type === "caption") {
             const startFrame = typeof caption.frame === "object" && caption.frame.start >= 0 ? caption.frame.start : caption.start * fps;
             const endFrame = typeof caption.frame === "object" && caption.frame.end >= 0 ? caption.frame.end : caption.end * fps;
             const text = caption.text.replace(/\r?\n/, "|");
-            sub += `{${startFrame}}` + `{${endFrame}}${text}${eol}`;
+            sub += `{${startFrame}}{${endFrame}}${text}${eol}`;
             continue;
         }
 

@@ -2,24 +2,34 @@ import formats from "./format/index.js";
 import { BuildOptions, Caption, ConvertOptions, ParseOptions, ResyncOptions } from "./types/handler.js";
 import { ResyncFunction, SubsrtInterface } from "./types/subsrt.js";
 
-const clone = (obj: object) => JSON.parse(JSON.stringify(obj));
+/**
+ * Clones an object.
+ * @param obj The object to clone
+ * @returns The cloned object
+ */
+const clone = <T>(obj: T): T => JSON.parse(JSON.stringify(obj));
 
+/**
+ * Main subsrt class.
+ */
 class Subsrt implements SubsrtInterface {
     format = formats;
 
     /**
      * Gets a list of supported subtitle formats.
+     * @returns The list of supported subtitle formats
      */
     list = () => Object.keys(this.format);
 
     /**
      * Detects a subtitle format from the content.
+     * @param content The subtitle content
+     * @returns The detected format
      */
     detect = (content: string) => {
         const formats = this.list();
-        for (let i = 0; i < formats.length; i++) {
-            const f = formats[i];
-            const handler = this.format[f];
+        for (const format of formats) {
+            const handler = this.format[format];
             if (typeof handler === "undefined") {
                 continue;
             }
@@ -27,9 +37,9 @@ class Subsrt implements SubsrtInterface {
                 continue;
             }
             // Function 'detect' can return true or format name
-            const d = handler.detect(content);
-            if (d === true || d === f) {
-                return f;
+            const detected = handler.detect(content);
+            if (detected === true || detected === format) {
+                return format;
             }
         }
         return "";
@@ -37,6 +47,9 @@ class Subsrt implements SubsrtInterface {
 
     /**
      * Parses a subtitle content.
+     * @param content The subtitle content
+     * @param options The parsing options
+     * @returns The parsed captions
      */
     parse = (content: string, options = <ParseOptions>{}) => {
         const format = options.format || this.detect(content);
@@ -59,6 +72,9 @@ class Subsrt implements SubsrtInterface {
 
     /**
      * Builds a subtitle content.
+     * @param captions The captions to build
+     * @param options The building options
+     * @returns The built subtitle content
      */
     build = (captions: Caption[], options = <BuildOptions>{}) => {
         const format = options.format || "srt";
@@ -81,6 +97,9 @@ class Subsrt implements SubsrtInterface {
 
     /**
      * Converts subtitle format.
+     * @param content The subtitle content
+     * @param options The conversion options
+     * @returns The converted subtitle content
      */
     convert = (content: string, _options: ConvertOptions | string = <ConvertOptions>{}) => {
         let options = <ConvertOptions>{};
@@ -113,7 +132,11 @@ class Subsrt implements SubsrtInterface {
 
     /**
      * Shifts the time of the captions.
+     * @param captions The captions to resync
+     * @param options The resync options
+     * @returns The resynced captions
      */
+    // skipcq: JS-0105
     resync = (captions: Caption[], options: ResyncFunction | number | ResyncOptions = <ResyncOptions>{}) => {
         let func: ResyncFunction,
             ratio: number,
@@ -134,10 +157,10 @@ class Subsrt implements SubsrtInterface {
         }
 
         const resynced: Caption[] = [];
-        for (let i = 0; i < captions.length; i++) {
-            const caption = clone(captions[i]);
+        for (const _caption of captions) {
+            const caption = clone(_caption);
             if (!caption.type || caption.type === "caption") {
-                if (frame) {
+                if (frame && caption.frame) {
                     const shift = func([caption.frame.start, caption.frame.end]);
                     if (shift && shift.length === 2) {
                         caption.frame.start = shift[0];
