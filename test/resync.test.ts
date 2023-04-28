@@ -5,7 +5,7 @@ import { parse, resync } from "../lib/subsrt";
 import { ContentCaption } from "../lib/types/handler";
 
 describe("Resync", () => {
-    it("should resync +3000 ms", () => {
+    test("should resync +3000 ms", () => {
         const srt = readFileSync("./test/fixtures/sample.srt", "utf8");
         const captions = parse(srt);
         const resynced = resync(captions, +3000);
@@ -18,7 +18,7 @@ describe("Resync", () => {
         expect((resynced[0] as ContentCaption).end).toBe((captions[0] as ContentCaption).end + 3000);
     });
 
-    it("should resync -250 ms", () => {
+    test("should resync -250 ms", () => {
         const sbv = readFileSync("./test/fixtures/sample.sbv", "utf8");
         const captions = parse(sbv);
         const resynced = resync(captions, -250);
@@ -31,7 +31,7 @@ describe("Resync", () => {
         expect((resynced[3] as ContentCaption).end).toBe((captions[3] as ContentCaption).end - 250);
     });
 
-    it("should resync 25 to 30 FPS", () => {
+    test("should resync 25 to 30 FPS", () => {
         const sub = readFileSync("./test/fixtures/sample.sub", "utf8");
         const captions = parse(sub, <SUBParseOptions>{ fps: 25 });
         const resynced = resync(captions, { ratio: 30 / 25, frame: true });
@@ -46,7 +46,7 @@ describe("Resync", () => {
         expect((resynced[3] as ContentCaption).frame?.count).toBe((((captions[3] as ContentCaption)?.frame?.count || 0) * 30) / 25);
     });
 
-    it("should resync with non-linear function", () => {
+    test("should resync wtesth non-linear function", () => {
         const vtt = readFileSync("./test/fixtures/sample.vtt", "utf8");
         const captions = parse(vtt);
         const resynced = resync(captions, (a) => [
