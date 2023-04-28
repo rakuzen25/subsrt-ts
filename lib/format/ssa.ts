@@ -26,6 +26,16 @@ const helper = {
     },
 };
 
+const _buildCaptionData = (columns: string[], values: string[]) => {
+    const r: {
+        [key: string]: string;
+    } = {};
+    for (let c = 0; c < columns.length && c < values.length; c++) {
+        r[columns[c]] = values[c];
+    }
+    return r;
+};
+
 /**
  * Parses captions in SubStation Alpha format (.ssa).
  */
@@ -74,10 +84,7 @@ const parse = (content: string, options: ParseOptions) => {
                         const values = value.split(/\s*,\s*/g);
                         const caption = <StyleCaption>{};
                         caption.type = "style";
-                        caption.data = {};
-                        for (let c = 0; c < columns.length && c < values.length; c++) {
-                            caption.data[columns[c]] = values[c];
-                        }
+                        caption.data = _buildCaptionData(columns, values);
                         captions.push(caption);
                     }
                 } else if (tag === "Events") {
@@ -89,21 +96,14 @@ const parse = (content: string, options: ParseOptions) => {
                         const values = value.split(/\s*,\s*/g);
                         const caption = <ContentCaption>{};
                         caption.type = "caption";
-                        caption.data = {};
-                        for (let c = 0; c < columns.length && c < values.length; c++) {
-                            caption.data[columns[c]] = values[c];
-                        }
+                        caption.data = _buildCaptionData(columns, values);
                         caption.start = helper.toMilliseconds(caption.data.Start);
                         caption.end = helper.toMilliseconds(caption.data.End);
                         caption.duration = caption.end - caption.start;
                         caption.content = caption.data.Text;
 
                         // Work-around for missing text (when the text contains ',' char)
-                        const getPosition = (s: string, search: string, index: number) => {
-                            return s.split(search, index).join(search).length;
-                        };
-
-                        const indexOfText = getPosition(value, ",", columns.length - 1) + 1;
+                        const indexOfText = value.split(",", columns.length - 1).join(",").length + 1 + 1;
                         caption.content = value.substring(indexOfText);
                         caption.data.Text = caption.content;
 
