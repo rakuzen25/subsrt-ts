@@ -2,13 +2,7 @@ name: Lint and test
 
 on:
     push:
-        paths:
-            - "**.js"
-            - "**.ts"
     pull_request:
-        paths:
-            - "**.js"
-            - "**.ts"
 
 jobs:
     run-linters-and-tests:
