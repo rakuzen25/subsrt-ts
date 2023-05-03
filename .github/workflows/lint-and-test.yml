@@ -17,7 +17,7 @@ jobs:
               uses: actions/cache@v3
               with:
                   path: "**/node_modules"
-                  key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+                  key: ${{ runner.os }}-yarn-${{ hashFiles('**/package.json') }}
 
             - name: Set up Node.js
               uses: actions/setup-node@v3
