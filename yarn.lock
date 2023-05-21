@@ -443,10 +443,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/js@npm:8.40.0":
-  version: 8.40.0
-  resolution: "@eslint/js@npm:8.40.0"
-  checksum: 0a7253c6aa5d14bda570cde5aff627fc338ca3b6e6226e2cbe7008a095ff244109f7edd1c340465d0aab3cea695ea7eb10bff96e6e9cab60cdd3226ac010041b
+"@eslint/js@npm:8.41.0":
+  version: 8.41.0
+  resolution: "@eslint/js@npm:8.41.0"
+  checksum: 41cf403ccebbc90315c7190bd901fa17975327022146b2db8c846ec5b11d04c56b33ccf9064b9da7349068e96bef8f322423fbcce700d815b4097fd808aaa4c6
   languageName: node
   linkType: hard
 
@@ -977,16 +977,16 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*":
-  version: 20.1.7
-  resolution: "@types/node@npm:20.1.7"
-  checksum: 61709dbbf2e4e646340cf72e0cfc125f35b4e3167d86f97a2d09b44af937504f4169f9e0ac20fa6d717b672d1a54506b8d0330cd65383d8b5e188105267e0273
+  version: 20.2.2
+  resolution: "@types/node@npm:20.2.2"
+  checksum: 89b2695606b68879d5f7a39c91aa5cde84da856b8b37fa2fcc96a9996ca0613498b3d2d49e2ab3cf00fb95f6466cf0ac4ada86d3b8f2fcbc10510ca2d26c8700
   languageName: node
   linkType: hard
 
 "@types/node@npm:^18.16.2":
-  version: 18.16.12
-  resolution: "@types/node@npm:18.16.12"
-  checksum: e356cff9cf576089cd12d13f3d611f59e86f62ed11afcb243f1699638dbef2ac45a685898046dcda98d4bfe91591dfc1191e873098f48d56dda10c3232127e2b
+  version: 18.16.14
+  resolution: "@types/node@npm:18.16.14"
+  checksum: 28b00ede91212971c8724c73a922d7dec70d4a3b95d576b28946b12ebe82f2ba7f3d07b2c2e1584e1149cc11ca1c93d4da1f5c48d9b541a9c0311b88d03ea43b
   languageName: node
   linkType: hard
 
@@ -2256,13 +2256,13 @@ __metadata:
   linkType: hard
 
 "eslint@npm:^8.39.0":
-  version: 8.40.0
-  resolution: "eslint@npm:8.40.0"
+  version: 8.41.0
+  resolution: "eslint@npm:8.41.0"
   dependencies:
     "@eslint-community/eslint-utils": ^4.2.0
     "@eslint-community/regexpp": ^4.4.0
     "@eslint/eslintrc": ^2.0.3
-    "@eslint/js": 8.40.0
+    "@eslint/js": 8.41.0
     "@humanwhocodes/config-array": ^0.11.8
     "@humanwhocodes/module-importer": ^1.0.1
     "@nodelib/fs.walk": ^1.2.8
@@ -2282,13 +2282,12 @@ __metadata:
     find-up: ^5.0.0
     glob-parent: ^6.0.2
     globals: ^13.19.0
-    grapheme-splitter: ^1.0.4
+    graphemer: ^1.4.0
     ignore: ^5.2.0
     import-fresh: ^3.0.0
     imurmurhash: ^0.1.4
     is-glob: ^4.0.0
     is-path-inside: ^3.0.3
-    js-sdsl: ^4.1.4
     js-yaml: ^4.1.0
     json-stable-stringify-without-jsonify: ^1.0.1
     levn: ^0.4.1
@@ -2301,7 +2300,7 @@ __metadata:
     text-table: ^0.2.0
   bin:
     eslint: bin/eslint.js
-  checksum: dfd4dbb5e2771d7c81852f29cec658fd9d29a0f252b6e962505ee8cd8b9c2c50707ebd7379333836b04514375268e7c09927372601d08354a151fe5db7d760a8
+  checksum: d71832b235bebaa67c09019dee32bf8393c5e12155e91131c4606670eb9836fbff31e11364408258cb75e2bde8a4dfa0c042aa6145bb23cd800a42e63ca4a035
   languageName: node
   linkType: hard
 
@@ -2782,6 +2781,13 @@ __metadata:
   version: 1.0.4
   resolution: "grapheme-splitter@npm:1.0.4"
   checksum: 108415fb07ac913f17040dc336607772fcea68c7f495ef91887edddb0b0f5ff7bc1d1ab181b125ecb2f0505669ef12c9a178a3bbd2dd8e042d8c5f1d7c90331a
+  languageName: node
+  linkType: hard
+
+"graphemer@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "graphemer@npm:1.4.0"
+  checksum: e951259d8cd2e0d196c72ec711add7115d42eb9a8146c8eeda5b8d3ac91e5dd816b9cd68920726d9fd4490368e7ed86e9c423f40db87e2d8dfafa00fa17c3a31
   languageName: node
   linkType: hard
 
@@ -3710,13 +3716,6 @@ __metadata:
   bin:
     jest: bin/jest.js
   checksum: 32e29cfa2373530ed323ea65dfb4fd5172026349be48ebb7a2dc5660adadd1c68f6b0fe2b67cc3ee723cc34e2d4552a852730ac787251b406cf58e37a90f6dac
-  languageName: node
-  linkType: hard
-
-"js-sdsl@npm:^4.1.4":
-  version: 4.4.0
-  resolution: "js-sdsl@npm:4.4.0"
-  checksum: 1eabe718867d293771074b5a14a82a115727b3d4abc9524fb9b0cb74293f447b90fe27bb74eb712b6400aeb7b869631c0a67d3347670cf22d067e77caeeb2f33
   languageName: node
   linkType: hard
 
