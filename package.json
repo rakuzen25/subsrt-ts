@@ -24,7 +24,7 @@
     ],
     "license": "MIT",
     "type": "module",
-    "packageManager": "yarn@3.6.0",
+    "packageManager": "yarn@3.6.1",
     "main": "dist/subsrt.js",
     "bin": "bin/subsrt.js",
     "types": "dist/subsrt.d.ts",
