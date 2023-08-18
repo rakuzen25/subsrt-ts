@@ -1026,16 +1026,16 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*":
-  version: 20.4.10
-  resolution: "@types/node@npm:20.4.10"
-  checksum: 203a930077cb02d91b8ca98a254667112b1f4c5828f94908078c126d22b71508069c3ef70c569b313d56752edcc692e62ee47c267dd0ad44a5c22ab7d128ab8c
+  version: 20.5.1
+  resolution: "@types/node@npm:20.5.1"
+  checksum: b5aeaeb489842081190f8c2c09e923ff7b1b4ee3ecfceba12ba1030ce7750909a1b3c0f5372bd60cbe955e48a9889f416522e8a96697ad7209317752f395e3e5
   languageName: node
   linkType: hard
 
 "@types/node@npm:^18.16.2":
-  version: 18.17.5
-  resolution: "@types/node@npm:18.17.5"
-  checksum: 763c753351d3ceaedb5888a03b10f0925c5be6e80b3fa5755f47f4c6ba401999becaf7317105554a07dbba43467f2890285cfb7252c34e1b1afed3ef56acdf55
+  version: 18.17.6
+  resolution: "@types/node@npm:18.17.6"
+  checksum: 952184330426dfc7af31dcee46cdfe352ae5f9568debf9a8b2c59ae43d35d0b94d63085cce9719e4835579d3a5a1fb96b82b214d5c094cca9f0ee2cabbcd8fdb
   languageName: node
   linkType: hard
 
@@ -2257,8 +2257,8 @@ __metadata:
   linkType: hard
 
 "eslint-plugin-import@npm:^2.27.5":
-  version: 2.28.0
-  resolution: "eslint-plugin-import@npm:2.28.0"
+  version: 2.28.1
+  resolution: "eslint-plugin-import@npm:2.28.1"
   dependencies:
     array-includes: ^3.1.6
     array.prototype.findlastindex: ^1.2.2
@@ -2269,18 +2269,17 @@ __metadata:
     eslint-import-resolver-node: ^0.3.7
     eslint-module-utils: ^2.8.0
     has: ^1.0.3
-    is-core-module: ^2.12.1
+    is-core-module: ^2.13.0
     is-glob: ^4.0.3
     minimatch: ^3.1.2
     object.fromentries: ^2.0.6
     object.groupby: ^1.0.0
     object.values: ^1.1.6
-    resolve: ^1.22.3
     semver: ^6.3.1
     tsconfig-paths: ^3.14.2
   peerDependencies:
     eslint: ^2 || ^3 || ^4 || ^5 || ^6 || ^7.2.0 || ^8
-  checksum: 0d7b978a3c4778b68bede2c8a14512e33581091bd8a508c4a424d2e8bff1f174549ffc3f2b7cfb28345cfb63061d3e43fdaa810ebfe9c96b5a4a1dc4047f6e9d
+  checksum: 5a29554d56f26d2bfb4d4f20b99aad6664c64812ef9655d5b3f089bbf70f340a34dabbe0b8ffa38bd9f1eabf828200acc5a56634842ddb83dd1e4ba01ad6d38d
   languageName: node
   linkType: hard
 
@@ -3203,12 +3202,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-core-module@npm:^2.12.1":
-  version: 2.12.1
-  resolution: "is-core-module@npm:2.12.1"
+"is-core-module@npm:^2.13.0":
+  version: 2.13.0
+  resolution: "is-core-module@npm:2.13.0"
   dependencies:
     has: ^1.0.3
-  checksum: ff1d0dfc0b7851310d289398e416eb92ae8a9ac7ea8b8b9737fa8c0725f5a78c5f3db6edd4dff38c9ed731f3aaa1f6410a320233fcb52a2c8f1cf58eebf10a4b
+  checksum: a8e7f46f8cefd7c9f6f5d54f3dbf1c40bf79467b6612d6023421ec6ea7e8e4c22593b3963ff7a3f770db07bc19fccbe7987a550a8bc1a4d6ec4115db5e4c5dca
   languageName: node
   linkType: hard
 
@@ -4814,7 +4813,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"resolve@npm:^1.20.0, resolve@npm:^1.22.1, resolve@npm:^1.22.3":
+"resolve@npm:^1.20.0, resolve@npm:^1.22.1":
   version: 1.22.3
   resolution: "resolve@npm:1.22.3"
   dependencies:
@@ -4827,7 +4826,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"resolve@patch:resolve@^1.20.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.22.1#~builtin<compat/resolve>, resolve@patch:resolve@^1.22.3#~builtin<compat/resolve>":
+"resolve@patch:resolve@^1.20.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.22.1#~builtin<compat/resolve>":
   version: 1.22.3
   resolution: "resolve@patch:resolve@npm%3A1.22.3#~builtin<compat/resolve>::version=1.22.3&hash=c3c19d"
   dependencies:
