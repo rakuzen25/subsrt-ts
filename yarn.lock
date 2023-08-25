@@ -457,10 +457,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/js@npm:^8.47.0":
-  version: 8.47.0
-  resolution: "@eslint/js@npm:8.47.0"
-  checksum: fb5b1377f0d7a8299c65baa856b23a7976165b0fc269b6220fd8e6dfb7fa29de83528b16226ccbe3625f24082a53ec8ca19d75d89f057478f17871b4fcdb32a0
+"@eslint/js@npm:8.48.0":
+  version: 8.48.0
+  resolution: "@eslint/js@npm:8.48.0"
+  checksum: c8ac8952f37cccd41b4adc4399a7a3a6a0b4c52d67bc55b412be5b3ffb476343b3463a4df2c1d7b633dbb6e0d5fb277eeaf3ba0de0dcdf6d0ed97fcdd416ba94
   languageName: node
   linkType: hard
 
@@ -2386,13 +2386,13 @@ __metadata:
   linkType: hard
 
 "eslint@npm:^8.39.0":
-  version: 8.47.0
-  resolution: "eslint@npm:8.47.0"
+  version: 8.48.0
+  resolution: "eslint@npm:8.48.0"
   dependencies:
     "@eslint-community/eslint-utils": ^4.2.0
     "@eslint-community/regexpp": ^4.6.1
     "@eslint/eslintrc": ^2.1.2
-    "@eslint/js": ^8.47.0
+    "@eslint/js": 8.48.0
     "@humanwhocodes/config-array": ^0.11.10
     "@humanwhocodes/module-importer": ^1.0.1
     "@nodelib/fs.walk": ^1.2.8
@@ -2428,7 +2428,7 @@ __metadata:
     text-table: ^0.2.0
   bin:
     eslint: bin/eslint.js
-  checksum: b6c69f2ca34990027cfe7d46c956672583549b2a13d118791ee60ad1fa3e5057ab7781b27c9b0ea76dc67f7e980b33e106ad07d54c83464ab9ba03d2ec832f36
+  checksum: 93517576a212282383bb10647a8d9e502e12d0aa8c781f2d2585c6651b570349a6e4a768f32eb1e2cd948cff0e0e1c519651aa99c9d1a0dc70f1a3eba0512ba2
   languageName: node
   linkType: hard
 
@@ -4229,12 +4229,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minimatch@npm:^9.0.0":
-  version: 9.0.0
-  resolution: "minimatch@npm:9.0.0"
+"minimatch@npm:^9.0.3":
+  version: 9.0.3
+  resolution: "minimatch@npm:9.0.3"
   dependencies:
     brace-expansion: ^2.0.1
-  checksum: d966656c280a994f89c3711e8cdac0c78d8703d028a26722d0229e3e92bf515a065165caa64cbccdd7ca89bb0338a3094920f8d42d36295c4d55922e19ae366e
+  checksum: 85f407dcd38ac3e180f425e86553911d101455ca3ad5544d6a7cec16286657e4f8a9aa6695803025c55e31e35a91a2252b5dc8e7d527211278b8b65b4dbd5eac
   languageName: node
   linkType: hard
 
@@ -5253,7 +5253,7 @@ __metadata:
     jest: ^29.5.0
     prettier: ^3.0.0
     ts-jest: ^29.1.0
-    typedoc: ^0.24.6
+    typedoc: ^0.25.0
     typedoc-plugin-missing-exports: ^2.0.0
     typescript: ^5.0.4
   bin:
@@ -5498,27 +5498,27 @@ __metadata:
   linkType: hard
 
 "typedoc-plugin-missing-exports@npm:^2.0.0":
-  version: 2.0.1
-  resolution: "typedoc-plugin-missing-exports@npm:2.0.1"
+  version: 2.1.0
+  resolution: "typedoc-plugin-missing-exports@npm:2.1.0"
   peerDependencies:
-    typedoc: 0.24.x
-  checksum: 6fa65dfef01931351cb26ad447f86068f5783bb67dce48cc6442c2b7e0a340bb3c9cb96c211483807a72caaeb493b4237272f9d57e7972f07118fde77f9a28ce
+    typedoc: 0.24.x || 0.25.x
+  checksum: 65ba23913e389b473df770ad4b0e29cb1f90c9a11bc6f554863203618d5db23c5296686d03fb6b37dcad75e902d3f7711b5c6589a513cd0a2494f2440c170690
   languageName: node
   linkType: hard
 
-"typedoc@npm:^0.24.6":
-  version: 0.24.8
-  resolution: "typedoc@npm:0.24.8"
+"typedoc@npm:^0.25.0":
+  version: 0.25.0
+  resolution: "typedoc@npm:0.25.0"
   dependencies:
     lunr: ^2.3.9
     marked: ^4.3.0
-    minimatch: ^9.0.0
+    minimatch: ^9.0.3
     shiki: ^0.14.1
   peerDependencies:
-    typescript: 4.6.x || 4.7.x || 4.8.x || 4.9.x || 5.0.x || 5.1.x
+    typescript: 4.6.x || 4.7.x || 4.8.x || 4.9.x || 5.0.x || 5.1.x || 5.2.x
   bin:
     typedoc: bin/typedoc
-  checksum: 0fae7de1b17561085e112b6b429de66ee84536dd3a602f11eefd702997c7bcfbde0ac9b56759a66d0d5fda98ff99d37940fc4257a5a0113854549777801901d1
+  checksum: 7dd55a137e043118b0a6bfed0a60ced970c310892cc1a803a749251b6e9fbc26673e8f2ea7162412abf4c14f647c7246580148c8c319bce3d5709f522b42da2f
   languageName: node
   linkType: hard
 
