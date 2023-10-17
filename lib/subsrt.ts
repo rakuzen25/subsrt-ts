@@ -4,10 +4,10 @@ import { ResyncFunction, SubsrtInterface } from "./types/subsrt.js";
 
 /**
  * Clones an object.
- * @param obj The object to clone
+ * @param obj - The object to clone
  * @returns The cloned object
  */
-const clone = <T>(obj: T): T => JSON.parse(JSON.stringify(obj));
+const clone = <T extends object>(obj: T) => JSON.parse(JSON.stringify(obj)) as T;
 
 /**
  * Main subsrt class.
@@ -23,7 +23,7 @@ class Subsrt implements SubsrtInterface {
 
     /**
      * Detects a subtitle format from the content.
-     * @param content The subtitle content
+     * @param content - The subtitle content
      * @returns The detected format
      */
     detect = (content: string) => {
@@ -47,15 +47,15 @@ class Subsrt implements SubsrtInterface {
 
     /**
      * Parses a subtitle content.
-     * @param content The subtitle content
-     * @param options The parsing options
-     * @throws {TypeError} If the format cannot be determined
-     * @throws {TypeError} If the format is not supported
-     * @throws {TypeError} If the handler does not support 'parse' op
+     * @param content - The subtitle content
+     * @param options - The parsing options
+     * @throws TypeError If the format cannot be determined
+     * @throws TypeError If the format is not supported
+     * @throws TypeError If the handler does not support 'parse' op
      * @returns The parsed captions
      */
-    parse = (content: string, options = <ParseOptions>{}) => {
-        const format = options.format || this.detect(content);
+    parse = (content: string, options = {} as ParseOptions) => {
+        const format = options.format ?? this.detect(content);
         if (!format || format.trim().length === 0) {
             throw new TypeError("Cannot determine subtitle format");
         }
@@ -75,14 +75,14 @@ class Subsrt implements SubsrtInterface {
 
     /**
      * Builds a subtitle content.
-     * @param captions The captions to build
-     * @param options The building options
-     * @throws {TypeError} If the format cannot be determined
-     * @throws {TypeError} If the format is not supported
-     * @throws {TypeError} If the handler does not support 'build' op
+     * @param captions - The captions to build
+     * @param options - The building options
+     * @throws TypeError If the format cannot be determined
+     * @throws TypeError If the format is not supported
+     * @throws TypeError If the handler does not support 'build' op
      * @returns The built subtitle content
      */
-    build = (captions: Caption[], options = <BuildOptions>{}) => {
+    build = (captions: Caption[], options = {} as BuildOptions) => {
         const format = options.format || "srt";
         if (!format || format.trim().length === 0) {
             throw new TypeError("Cannot determine subtitle format");
@@ -103,34 +103,34 @@ class Subsrt implements SubsrtInterface {
 
     /**
      * Converts subtitle format.
-     * @param content The subtitle content
-     * @param options The conversion options
+     * @param content - The subtitle content
+     * @param options - The conversion options
      * @returns The converted subtitle content
      */
-    convert = (content: string, _options: ConvertOptions | string = <ConvertOptions>{}) => {
-        let options = <ConvertOptions>{};
+    convert = (content: string, _options: ConvertOptions | string = {} as ConvertOptions) => {
+        let options = {} as ConvertOptions;
         if (typeof _options === "string") {
             options.to = _options;
         } else {
             options = _options;
         }
 
-        const parseOptions = <ParseOptions>{
-            format: options.from || undefined,
+        const parseOptions = {
+            format: options.from ?? undefined,
             verbose: options.verbose,
             eol: options.eol,
-        };
+        } as ParseOptions;
         let captions = this.parse(content, parseOptions);
 
         if (options.resync) {
             captions = this.resync(captions, options.resync);
         }
 
-        const buildOptions = <BuildOptions>{
+        const buildOptions = {
             format: options.to || options.format,
             verbose: options.verbose,
             eol: options.eol,
-        };
+        } as BuildOptions;
         const result = this.build(captions, buildOptions);
 
         return result;
@@ -138,13 +138,13 @@ class Subsrt implements SubsrtInterface {
 
     /**
      * Shifts the time of the captions.
-     * @param captions The captions to resync
-     * @param options The resync options
-     * @throws {TypeError} If the 'options' argument is not defined
+     * @param captions - The captions to resync
+     * @param options - The resync options
+     * @throws TypeError If the 'options' argument is not defined
      * @returns The resynced captions
      */
     // skipcq: JS-0105
-    resync = (captions: Caption[], options: ResyncFunction | number | ResyncOptions = <ResyncOptions>{}) => {
+    resync = (captions: Caption[], options: ResyncFunction | number | ResyncOptions = {} as ResyncOptions) => {
         let func: ResyncFunction,
             ratio: number,
             frame = false,
@@ -155,9 +155,9 @@ class Subsrt implements SubsrtInterface {
             offset = options; // Time shift (+/- offset)
             func = (a) => [a[0] + offset, a[1] + offset];
         } else if (typeof options === "object") {
-            offset = (options.offset || 0) * (options.frame ? options.fps || 25 : 1);
-            ratio = options.ratio || 1.0;
-            frame = options.frame || false;
+            offset = (options.offset ?? 0) * (options.frame ? options.fps ?? 25 : 1);
+            ratio = options.ratio ?? 1.0;
+            frame = options.frame ?? false;
             func = (a) => [Math.round(a[0] * ratio + offset), Math.round(a[1] * ratio + offset)];
         } else {
             throw new TypeError("Argument 'options' not defined");

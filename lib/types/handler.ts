@@ -12,27 +12,19 @@ export interface ContentCaption {
         end: number;
         count: number;
     };
-    data?: {
-        [key: string]: string;
-    };
+    data?: Record<string, string>;
 }
 
 export interface MetaCaption {
     type: "meta";
     name: string;
-    data:
-        | string
-        | {
-              [key: string]: string;
-          };
+    data: string | Record<string, string>;
     tag?: string;
 }
 
 export interface StyleCaption {
     type: "style";
-    data: {
-        [key: string]: string;
-    };
+    data: Record<string, string>;
 }
 
 export type Caption = ContentCaption | MetaCaption | StyleCaption;
@@ -70,12 +62,12 @@ export interface ResyncOptions {
     fps?: number;
 }
 
-export type Helper = {
+export interface Helper {
     toMilliseconds?: (time: string) => number;
     toTimeString?: (ms: number) => string;
     htmlEncode?: (text: string) => string;
     htmlDecode?: (text: string, eol: string) => string;
-};
+}
 export type BuildFunction = (captions: Caption[], options: BuildOptions) => string;
 export type DetectFunction = (content: string) => boolean | string;
 export type ParseFunction = (content: string, options: ParseOptions) => Caption[];

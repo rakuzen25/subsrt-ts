@@ -10,7 +10,7 @@ import ssa from "./ssa.js";
 import sub from "./sub.js";
 import vtt from "./vtt.js";
 
-const formats = <SubsrtFormats>{
+const formats = {
     vtt,
     lrc,
     smi,
@@ -20,6 +20,6 @@ const formats = <SubsrtFormats>{
     srt,
     sbv,
     json,
-};
+} as SubsrtFormats;
 
 export default formats;

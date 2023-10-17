@@ -22,8 +22,8 @@ const helper = {
             .replace(/\r?\n/g, "<BR>"),
     /**
      * Decodes a string that has been HTML-encoded.
-     * @param html The HTML-encoded string to decode
-     * @param eol The end-of-line character to use
+     * @param html - The HTML-encoded string to decode
+     * @param eol - The end-of-line character to use
      * @returns The decoded string
      */
     htmlDecode: (html: string, eol: string) =>
@@ -39,9 +39,9 @@ const helper = {
 
 /**
  * Parses captions in SAMI format (.smi).
- * @param content The subtitle content
- * @param options Parse options
- * @throw {TypeError} When the format is not supported
+ * @param content - The subtitle content
+ * @param options - Parse options
+ * @throws TypeError When the format is not supported
  * @returns Parsed captions
  */
 const parse = (content: string, options: SMIParseOptions) => {
@@ -50,11 +50,11 @@ const parse = (content: string, options: SMIParseOptions) => {
     }
 
     const captions = [];
-    const eol = options.eol || "\r\n";
+    const eol = options.eol ?? "\r\n";
 
     const title = /<TITLE[^>]*>([\s\S]*)<\/TITLE>/i.exec(content);
     if (title) {
-        const caption = <MetaCaption>{};
+        const caption = {} as MetaCaption;
         caption.type = "meta";
         caption.name = "title";
         caption.data = title[1].replace(/^\s*/g, "").replace(/\s*$/g, "");
@@ -63,7 +63,7 @@ const parse = (content: string, options: SMIParseOptions) => {
 
     const style = /<STYLE[^>]*>([\s\S]*)<\/STYLE>/i.exec(content);
     if (style) {
-        const caption = <MetaCaption>{};
+        const caption = {} as MetaCaption;
         caption.type = "meta";
         caption.name = "style";
         caption.data = style[1];
@@ -75,7 +75,7 @@ const parse = (content: string, options: SMIParseOptions) => {
         .replace(/<\/BODY[^>]*>[\s\S]*$/gi, ""); // Remove content after body
 
     let prev = null;
-    const parts = sami.split(/<SYNC/gi);
+    const parts = sami.split(/<SYNC/i);
     for (const _part of parts) {
         if (!_part || _part.trim().length === 0) {
             continue;
@@ -86,7 +86,7 @@ const parse = (content: string, options: SMIParseOptions) => {
         // <SYNC Start = 1000>
         const match = /^<SYNC[^>]+Start\s*=\s*["']?(\d+)[^\d>]*>([\s\S]*)/i.exec(part);
         if (match) {
-            const caption = <ContentCaption>{};
+            const caption = {} as ContentCaption;
             caption.type = "caption";
             caption.start = parseInt(match[1], 10);
             caption.end = caption.start + 2000;
@@ -94,7 +94,7 @@ const parse = (content: string, options: SMIParseOptions) => {
             caption.content = match[2].replace(/^<\/SYNC[^>]*>/gi, "");
 
             let blank = true;
-            const pMatch = /^<P.+Class\s*=\s*["']?([\w-]+)(?: .*)?>([\s\S]*)/i.exec(caption.content) || /^<P([^>]*)>([\s\S]*)/i.exec(caption.content);
+            const pMatch = /^<P.+Class\s*=\s*["']?([\w-]+)(?: .*)?>([\s\S]*)/i.exec(caption.content) ?? /^<P([^>]*)>([\s\S]*)/i.exec(caption.content);
             if (pMatch) {
                 let html = pMatch[2].replace(/<P[\s\S]+$/gi, ""); // Remove string after another <P> tag
                 html = html
@@ -133,21 +133,21 @@ const parse = (content: string, options: SMIParseOptions) => {
 
 /**
  * Builds captions in SAMI format (.smi).
- * @param captions The captions to build
- * @param options Build options
+ * @param captions - The captions to build
+ * @param options - Build options
  * @returns The built captions string in SAMI format
  */
 const build = (captions: Caption[], options: SMIBuildOptions) => {
-    const eol = options.eol || "\r\n";
+    const eol = options.eol ?? "\r\n";
 
     let content = "";
     content += `<SAMI>${eol}`;
     content += `<HEAD>${eol}`;
-    content += `<TITLE>${options.title || ""}</TITLE>${eol}`;
+    content += `<TITLE>${options.title ?? ""}</TITLE>${eol}`;
     content += `<STYLE TYPE="text/css">${eol}`;
     content += `<!--${eol}`;
     content += `P { font-family: Arial; font-weight: normal; color: white; background-color: black; text-align: center; }${eol}`;
-    content += `.LANG { Name: ${options.langName || "English"}; lang: ${options.langCode || "en-US"}; SAMIType: CC; }${eol}`;
+    content += `.LANG { Name: ${options.langName ?? "English"}; lang: ${options.langCode ?? "en-US"}; SAMIType: CC; }${eol}`;
     content += `-->${eol}`;
     content += `</STYLE>${eol}`;
     content += `</HEAD>${eol}`;
@@ -189,7 +189,7 @@ const build = (captions: Caption[], options: SMIBuildOptions) => {
 
 /**
  * Detects whether the content is in SAMI format.
- * @param content The content to be detected
+ * @param content - The content to be detected
  * @returns Whether the subtitle format is SAMI
  */
 const detect = (content: string) => {

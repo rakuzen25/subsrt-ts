@@ -6,8 +6,8 @@ const FORMAT_NAME = "sbv";
 const helper = {
     /**
      * Converts a time string in format of hh:mm:ss.sss or hh:mm:ss,sss to milliseconds.
-     * @param s The time string to convert
-     * @throws {TypeError} If the time string is invalid
+     * @param s - The time string to convert
+     * @throws TypeError If the time string is invalid
      * @returns Milliseconds
      */
     toMilliseconds: (s: string) => {
@@ -25,7 +25,7 @@ const helper = {
 
     /**
      * Converts milliseconds to a time string in format of hh:mm:ss.sss.
-     * @param ms Milliseconds
+     * @param ms - Milliseconds
      * @returns Time string in format of hh:mm:ss.sss
      */
     toTimeString: (ms: number) => {
@@ -42,24 +42,24 @@ const helper = {
 
 /**
  * Parses captions in SubViewer format (.sbv).
- * @param content The subtitle content
- * @param options Parse options
+ * @param content - The subtitle content
+ * @param options - Parse options
  * @returns Parsed captions
  */
 const parse = (content: string, options: ParseOptions) => {
     const captions = [];
-    const eol = options.eol || "\r\n";
+    const eol = options.eol ?? "\r\n";
     const parts = content.split(/\r?\n\s*\n/);
     for (const part of parts) {
         const regex = /^(\d{1,2}:\d{1,2}:\d{1,2}(?:[.,]\d{1,3})?)\s*[,;]\s*(\d{1,2}:\d{1,2}:\d{1,2}(?:[.,]\d{1,3})?)\r?\n([\s\S]*)$/;
         const match = regex.exec(part);
         if (match) {
-            const caption = <ContentCaption>{};
+            const caption = {} as ContentCaption;
             caption.type = "caption";
             caption.start = helper.toMilliseconds(match[1]);
             caption.end = helper.toMilliseconds(match[2]);
             caption.duration = caption.end - caption.start;
-            const lines = match[3].split(/\[br\]|\r?\n/gi);
+            const lines = match[3].split(/\[br\]|\r?\n/i);
             caption.content = lines.join(eol);
             caption.text = caption.content.replace(/>>[^:]+:\s*/g, ""); // >> SPEAKER NAME:
             captions.push(caption);
@@ -75,13 +75,13 @@ const parse = (content: string, options: ParseOptions) => {
 
 /**
  * Builds captions in SubViewer format (.sbv).
- * @param captions The captions to build
- * @param options Build options
+ * @param captions - The captions to build
+ * @param options - Build options
  * @returns The built captions string in SubViewer format
  */
 const build = (captions: Caption[], options: BuildOptions) => {
     let content = "";
-    const eol = options.eol || "\r\n";
+    const eol = options.eol ?? "\r\n";
     for (const caption of captions) {
         if (!caption.type || caption.type === "caption") {
             content += `${helper.toTimeString(caption.start)},${helper.toTimeString(caption.end)}${eol}`;
@@ -99,7 +99,7 @@ const build = (captions: Caption[], options: BuildOptions) => {
 
 /**
  * Detects whether the content is in SubViewer format.
- * @param content The subtitle content
+ * @param content - The subtitle content
  * @returns Whether the subtitle format is SubViewer
  */
 const detect = (content: string) => {

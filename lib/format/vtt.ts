@@ -6,8 +6,8 @@ const FORMAT_NAME = "vtt";
 const helper = {
     /**
      * Converts a time string in format of hh:mm:ss.fff or hh:mm:ss,fff to milliseconds.
-     * @param s The time string to convert
-     * @throws {TypeError} If the time string is invalid
+     * @param s - The time string to convert
+     * @throws TypeError If the time string is invalid
      * @returns Milliseconds
      */
     toMilliseconds: (s: string) => {
@@ -24,7 +24,7 @@ const helper = {
     },
     /**
      * Converts milliseconds to a time string in format of hh:mm:ss.fff.
-     * @param ms Milliseconds
+     * @param ms - Milliseconds
      * @returns Time string in format of hh:mm:ss.fff
      */
     toTimeString: (ms: number) => {
@@ -41,8 +41,8 @@ const helper = {
 
 /**
  * Parses captions in WebVTT format (Web Video Text Tracks Format).
- * @param content The subtitle content
- * @param options Parse options
+ * @param content - The subtitle content
+ * @param options - Parse options
  * @returns Parsed captions
  */
 const parse = (content: string, options: ParseOptions) => {
@@ -55,7 +55,7 @@ const parse = (content: string, options: ParseOptions) => {
             /^([^\r\n]+\r?\n)?((?:\d{1,2}:)?\d{1,2}:\d{1,2}(?:[.,]\d{1,3})?)\s*-->\s*((?:\d{1,2}:)?\d{1,2}:\d{1,2}(?:[.,]\d{1,3})?)[^\S\r\n]?.*\r?\n([\s\S]*)$/;
         const match = regex.exec(part);
         if (match) {
-            const caption = <ContentCaption>{};
+            const caption = {} as ContentCaption;
             caption.type = "caption";
             caption.index = index++;
             if (match[1]) {
@@ -75,9 +75,9 @@ const parse = (content: string, options: ParseOptions) => {
         // WebVTT meta
         // FIXME: prevent backtracking
         // eslint-disable-next-line regexp/no-super-linear-backtracking
-        const meta = /^([A-Z]+)(\r?\n([\s\S]*))?$/.exec(part) || /^([A-Z]+)\s+([^\r\n]*)$/.exec(part);
+        const meta = /^([A-Z]+)(\r?\n([\s\S]*))?$/.exec(part) ?? /^([A-Z]+)\s+([^\r\n]*)$/.exec(part);
         if (meta) {
-            const caption = <MetaCaption>{};
+            const caption = {} as MetaCaption;
             caption.type = "meta";
             caption.name = meta[1];
             if (meta[3]) {
@@ -96,12 +96,12 @@ const parse = (content: string, options: ParseOptions) => {
 
 /**
  * Builds captions in WebVTT format (Web Video Text Tracks Format).
- * @param captions The captions to build
- * @param options Build options
+ * @param captions - The captions to build
+ * @param options - Build options
  * @returns The built captions string in WebVTT format
  */
 const build = (captions: Caption[], options: BuildOptions) => {
-    const eol = options.eol || "\r\n";
+    const eol = options.eol ?? "\r\n";
     let content = `WEBVTT${eol}${eol}`;
     for (let i = 0; i < captions.length; i++) {
         const caption = captions[i];
@@ -133,7 +133,7 @@ const build = (captions: Caption[], options: BuildOptions) => {
 
 /**
  * Detects whether the content is in WebVTT format.
- * @param content The subtitle content
+ * @param content - The subtitle content
  * @returns Whether the content is in WebVTT format
  */
 const detect = (content: string) => {

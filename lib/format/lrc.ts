@@ -6,8 +6,8 @@ const FORMAT_NAME = "lrc";
 const helper = {
     /**
      * Converts a time string in format of mm:ss.ff or mm:ss,ff to milliseconds.
-     * @param s The time string to convert
-     * @throws {TypeError} If the time string is invalid
+     * @param s - The time string to convert
+     * @throws TypeError If the time string is invalid
      * @returns Milliseconds
      */
     toMilliseconds: (s: string) => {
@@ -23,7 +23,7 @@ const helper = {
     },
     /**
      * Converts milliseconds to a time string in format of mm:ss.ff.
-     * @param ms Milliseconds
+     * @param ms - Milliseconds
      * @returns Time string in format of mm:ss.ff
      */
     toTimeString: (ms: number) => {
@@ -37,8 +37,8 @@ const helper = {
 
 /**
  * Parses captions in LRC format.
- * @param content The subtitle content
- * @param options Parse options
+ * @param content - The subtitle content
+ * @param options - Parse options
  * @returns Parsed captions
  * @see https://en.wikipedia.org/wiki/LRC_%28file_format%29
  */
@@ -56,7 +56,7 @@ const parse = (content: string, options: ParseOptions) => {
         const regex = /^\[(\d{1,2}:\d{1,2}(?:[.,]\d{1,3})?)\](.*)(?:\r?\n)*$/;
         const match = regex.exec(part);
         if (match) {
-            const caption = <ContentCaption>{};
+            const caption = {} as ContentCaption;
             caption.type = "caption";
             caption.start = helper.toMilliseconds(match[1]);
             caption.end = caption.start + 2000;
@@ -77,7 +77,7 @@ const parse = (content: string, options: ParseOptions) => {
         // LRC meta
         const meta = /^\[(\w+):([^\]]*)\](?:\r?\n)*$/.exec(part);
         if (meta) {
-            const caption = <MetaCaption>{};
+            const caption = {} as MetaCaption;
             caption.type = "meta";
             caption.tag = meta[1];
             if (meta[2]) {
@@ -96,15 +96,15 @@ const parse = (content: string, options: ParseOptions) => {
 
 /**
  * Builds captions in LRC format.
- * @param captions The captions to build
- * @param options Build options
+ * @param captions - The captions to build
+ * @param options - Build options
  * @returns The built captions string in LRC format
  * @see https://en.wikipedia.org/wiki/LRC_%28file_format%29
  */
 const build = (captions: Caption[], options: BuildOptions) => {
     let content = "";
     let lyrics = false;
-    const eol = options.eol || "\r\n";
+    const eol = options.eol ?? "\r\n";
     for (const caption of captions) {
         if (caption.type === "meta") {
             if (caption.tag && caption.data && typeof caption.data === "string") {
@@ -132,7 +132,7 @@ const build = (captions: Caption[], options: BuildOptions) => {
 
 /**
  * Detects whether the content is in LRC format.
- * @param content The subtitle content
+ * @param content - The subtitle content
  * @returns Format name if detected, or null if not detected
  */
 const detect = (content: string) => {

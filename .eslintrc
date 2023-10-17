@@ -1,17 +1,96 @@
 {
-    "parser": "@typescript-eslint/parser",
     "env": {
-        "es6": true,
         "es2017": true,
         "es2020": true,
+        "es6": true,
         "node": true
     },
+    "extends": ["eslint:recommended", "plugin:import/recommended", "plugin:regexp/recommended", "prettier"],
+    "overrides": [
+        {
+            "extends": ["plugin:jest/recommended"],
+            "files": ["test/**"],
+            "plugins": ["jest"]
+        },
+        {
+            "extends": [
+                "plugin:@typescript-eslint/recommended-type-checked",
+                "plugin:@typescript-eslint/stylistic-type-checked",
+                "plugin:import/typescript"
+            ],
+            "files": ["**/*.ts"]
+        }
+    ],
+    "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaVersion": "latest",
+        "project": "./tsconfig.json",
         "sourceType": "module"
     },
-    "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "plugin:import/recommended", "prettier", "plugin:regexp/recommended"],
-    "plugins": ["@typescript-eslint", "regexp"],
+    "plugins": ["@typescript-eslint", "regexp", "eslint-plugin-tsdoc"],
+    "rules": {
+        "@typescript-eslint/no-unused-vars": [
+            "error",
+            {
+                "argsIgnorePattern": "^_",
+                "varsIgnorePattern": "^_"
+            }
+        ],
+        "curly": "error",
+        "dot-notation": "error",
+        "eqeqeq": "error",
+        "import/order": [
+            "error",
+            {
+                "alphabetize": {
+                    "caseInsensitive": true,
+                    "order": "asc"
+                },
+                "groups": ["builtin", "external", "internal", "parent", "sibling", "index"],
+                "newlines-between": "always"
+            }
+        ],
+        "no-else-return": "error",
+        "no-empty": [
+            "error",
+            {
+                "allowEmptyCatch": true
+            }
+        ],
+        "no-extra-bind": "error",
+        "no-labels": "error",
+        "no-lone-blocks": "error",
+        "no-loop-func": "error",
+        "no-new-func": "error",
+        "no-new-object": "error",
+        "no-new-wrappers": "error",
+        "no-param-reassign": "error",
+        "no-redeclare": "error",
+        "no-template-curly-in-string": "error",
+        "no-unreachable": "error",
+        "no-useless-constructor": "error",
+        "prefer-arrow-callback": "error",
+        "prefer-exponentiation-operator": "error",
+        "prefer-template": "error",
+        "quotes": [
+            "error",
+            "double",
+            {
+                "avoidEscape": true
+            }
+        ],
+        "regexp/no-super-linear-backtracking": "warn",
+        "require-atomic-updates": "error",
+        "require-await": "error",
+        "sort-imports": [
+            "error",
+            {
+                "ignoreCase": true,
+                "ignoreDeclarationSort": true
+            }
+        ],
+        "tsdoc/syntax": "warn"
+    },
     "settings": {
         "import/parsers": {
             "@typescript-eslint/parser": [".ts", ".tsx"]
@@ -21,82 +100,5 @@
                 "alwaysTryTypes": true
             }
         }
-    },
-    "overrides": [
-        {
-            "files": ["test/**"],
-            "plugins": ["jest"],
-            "extends": ["plugin:jest/recommended"]
-        }
-    ],
-    "rules": {
-        "no-new-func": "error",
-        "no-new-object": "error",
-        "no-new-wrappers": "error",
-        "no-var": "error",
-        "prefer-const": "error",
-        "no-misleading-character-class": "error",
-        "no-template-curly-in-string": "error",
-        "require-atomic-updates": "error",
-        "curly": "error",
-        "linebreak-style": "off",
-        "no-console": "off",
-        "no-unused-vars": "off",
-        "@typescript-eslint/no-unused-vars": [
-            "warn",
-            {
-                "varsIgnorePattern": "^_",
-                "argsIgnorePattern": "^_"
-            }
-        ],
-        "no-redeclare": "warn",
-        "no-unreachable": "warn",
-        "no-inner-declarations": "off",
-        "eqeqeq": "error",
-        "dot-notation": "error",
-        "no-else-return": "error",
-        "no-extra-bind": "error",
-        "no-labels": "error",
-        "no-lone-blocks": "error",
-        "no-loop-func": "error",
-        "no-magic-numbers": "off",
-        "no-param-reassign": "error",
-        "quotes": [
-            "warn",
-            "double",
-            {
-                "avoidEscape": true
-            }
-        ],
-        "no-empty": [
-            "error",
-            {
-                "allowEmptyCatch": true
-            }
-        ],
-        "prefer-arrow-callback": "error",
-        "prefer-spread": "error",
-        "prefer-template": "error",
-        "prefer-rest-params": "error",
-        "prefer-exponentiation-operator": "error",
-        "require-await": "error",
-        "sort-imports": [
-            "error",
-            {
-                "ignoreCase": true,
-                "ignoreDeclarationSort": true
-            }
-        ],
-        "import/order": [
-            "error",
-            {
-                "groups": ["builtin", "external", "internal", "parent", "sibling", "index"],
-                "newlines-between": "always",
-                "alphabetize": {
-                    "order": "asc",
-                    "caseInsensitive": true
-                }
-            }
-        ]
     }
 }

@@ -6,8 +6,8 @@ const FORMAT_NAME = "ssa";
 const helper = {
     /**
      * Converts a time string in format of hh:mm:ss.fff or hh:mm:ss,fff to milliseconds.
-     * @param s The time string to convert
-     * @throws {TypeError} If the time string is invalid
+     * @param s - The time string to convert
+     * @throws TypeError If the time string is invalid
      * @returns Milliseconds
      */
     toMilliseconds: (s: string) => {
@@ -24,7 +24,7 @@ const helper = {
     },
     /**
      * Converts milliseconds to a time string in format of hh:mm:ss.fff.
-     * @param ms Milliseconds
+     * @param ms - Milliseconds
      * @returns Time string in format of hh:mm:ss.fff
      */
     toTimeString: (ms: number) => {
@@ -39,15 +39,13 @@ const helper = {
 
 /**
  * Internal helper function for building caption data.
- * @param columns Columns
- * @param values Values
+ * @param columns - Columns
+ * @param values - Values
  * @returns Caption data
- * @private
+ * @internal
  */
 const _buildCaptionData = (columns: string[], values: string[]) => {
-    const data: {
-        [key: string]: string;
-    } = {};
+    const data: Record<string, string> = {};
     for (let c = 0; c < columns.length && c < values.length; c++) {
         data[columns[c]] = values[c];
     }
@@ -56,16 +54,16 @@ const _buildCaptionData = (columns: string[], values: string[]) => {
 
 /**
  * Parses captions in SubStation Alpha format (.ssa).
- * @param content The subtitle content
- * @param options Parse options
- * @throws {TypeError} If the meta data is in invalid format
+ * @param content - The subtitle content
+ * @param options - Parse options
+ * @throws TypeError If the meta data is in invalid format
  * @returns Parsed captions
  */
 const parse = (content: string, options: ParseOptions) => {
     let meta;
     let columns = null;
     const captions = [];
-    const eol = options.eol || "\r\n";
+    const eol = options.eol ?? "\r\n";
     const parts = content.split(/\r?\n\s*\n/);
     for (const part of parts) {
         const regex = /^\s*\[([^\]]+)\]\r?\n([\s\S]*)$/;
@@ -85,7 +83,7 @@ const parse = (content: string, options: ParseOptions) => {
                 }
                 if (tag === "Script Info") {
                     if (!meta) {
-                        meta = <MetaCaption>{};
+                        meta = {} as MetaCaption;
                         meta.type = "meta";
                         meta.data = {};
                         captions.push(meta);
@@ -101,10 +99,10 @@ const parse = (content: string, options: ParseOptions) => {
                     const name = lineMatch[1].trim();
                     const value = lineMatch[2].trim();
                     if (name === "Format") {
-                        columns = value.split(/\s*,\s*/g);
+                        columns = value.split(/\s*,\s*/);
                     } else if (name === "Style" && columns) {
-                        const values = value.split(/\s*,\s*/g);
-                        const caption = <StyleCaption>{};
+                        const values = value.split(/\s*,\s*/);
+                        const caption = {} as StyleCaption;
                         caption.type = "style";
                         caption.data = _buildCaptionData(columns, values);
                         captions.push(caption);
@@ -113,10 +111,10 @@ const parse = (content: string, options: ParseOptions) => {
                     const name = lineMatch[1].trim();
                     const value = lineMatch[2].trim();
                     if (name === "Format") {
-                        columns = value.split(/\s*,\s*/g);
+                        columns = value.split(/\s*,\s*/);
                     } else if (name === "Dialogue" && columns) {
-                        const values = value.split(/\s*,\s*/g);
-                        const caption = <ContentCaption>{};
+                        const values = value.split(/\s*,\s*/);
+                        const caption = {} as ContentCaption;
                         caption.type = "caption";
                         caption.data = _buildCaptionData(columns, values);
                         caption.start = helper.toMilliseconds(caption.data.Start);
@@ -147,12 +145,12 @@ const parse = (content: string, options: ParseOptions) => {
 
 /**
  * Builds captions in SubStation Alpha format (.ssa).
- * @param captions The captions to build
- * @param options Build options
+ * @param captions - The captions to build
+ * @param options - Build options
  * @returns The built captions string in SubStation Alpha format
  */
 const build = (captions: Caption[], options: BuildOptions) => {
-    const eol = options.eol || "\r\n";
+    const eol = options.eol ?? "\r\n";
     const ass = options.format === "ass";
 
     let content = "";
@@ -196,7 +194,7 @@ const build = (captions: Caption[], options: BuildOptions) => {
 
 /**
  * Detects whether the content is in ASS or SSA format.
- * @param content The subtitle content
+ * @param content - The subtitle content
  * @returns Whether the content is in "ass", "ssa" or neither
  */
 const detect = (content: string) => {

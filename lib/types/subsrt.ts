@@ -4,9 +4,7 @@ import { BaseHandler, Caption, ConvertOptions, ResyncOptions } from "./handler";
 
 export type ResyncFunction = (a: number[]) => number[];
 
-export interface SubsrtFormats {
-    [key: string]: Handler;
-}
+export type SubsrtFormats = Record<string, Handler>;
 
 export interface SubsrtInterface extends Omit<BaseHandler, "name" | "helper"> {
     format: SubsrtFormats;

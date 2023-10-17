@@ -12,7 +12,7 @@ export class Handler implements BaseHandler {
 
     /**
      * Creates a new handler.
-     * @param args The handler properties (`name`, `build`, `detect`, `helper` and `parse`)
+     * @param args - The handler properties (`name`, `build`, `detect`, `helper` and `parse`)
      * @see
      * - {@link BaseHandler}
      * - {@link BuildFunction}
@@ -59,7 +59,7 @@ export class Handler implements BaseHandler {
 
 /**
  * Build a handler.
- * @param args The handler properties
+ * @param args - The handler properties
  * @returns The handler
  * @see {@link Handler}
  */

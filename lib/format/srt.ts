@@ -6,8 +6,8 @@ const FORMAT_NAME = "srt";
 const helper = {
     /**
      * Converts a time string in format of hh:mm:ss, hh:mm:ss.sss or hh:mm:ss,sss to milliseconds.
-     * @param s The time string to convert
-     * @throws {TypeError} If the time string is invalid
+     * @param s - The time string to convert
+     * @throws TypeError If the time string is invalid
      * @returns Milliseconds
      */
     toMilliseconds: (s: string) => {
@@ -24,7 +24,7 @@ const helper = {
     },
     /**
      * Converts milliseconds to a time string in format of hh:mm:ss,sss.
-     * @param ms Milliseconds
+     * @param ms - Milliseconds
      * @returns Time string in format of hh:mm:ss,sss
      */
     toTimeString: (ms: number) => {
@@ -41,19 +41,19 @@ const helper = {
 
 /**
  * Parses captions in SubRip format (.srt).
- * @param content The subtitle content
- * @param options Parse options
+ * @param content - The subtitle content
+ * @param options - Parse options
  * @returns Parsed captions
  */
 const parse = (content: string, options: ParseOptions) => {
     const captions = [];
-    const eol = options.eol || "\r\n";
-    const parts = content.split(/\r?\n\s*\n/g);
+    const eol = options.eol ?? "\r\n";
+    const parts = content.split(/\r?\n\s*\n/);
     for (const part of parts) {
         const regex = /^(\d+)\r?\n(\d{1,2}:\d{1,2}:\d{1,2}(?:[.,]\d{1,3})?)\s*-->\s*(\d{1,2}:\d{1,2}:\d{1,2}(?:[.,]\d{1,3})?)\r?\n([\s\S]*)$/;
         const match = regex.exec(part);
         if (match) {
-            const caption = <ContentCaption>{};
+            const caption = {} as ContentCaption;
             caption.type = "caption";
             caption.index = parseInt(match[1], 10);
             caption.start = helper.toMilliseconds(match[2]);
@@ -78,13 +78,13 @@ const parse = (content: string, options: ParseOptions) => {
 
 /**
  * Builds captions in SubRip format (.srt).
- * @param captions The captions to build
- * @param options Build options
+ * @param captions - The captions to build
+ * @param options - Build options
  * @returns The built captions string in SubRip format
  */
 const build = (captions: Caption[], options: BuildOptions) => {
     let srt = "";
-    const eol = options.eol || "\r\n";
+    const eol = options.eol ?? "\r\n";
     for (let i = 0; i < captions.length; i++) {
         const caption = captions[i];
         if (!caption.type || caption.type === "caption") {
@@ -104,7 +104,7 @@ const build = (captions: Caption[], options: BuildOptions) => {
 
 /**
  * Detects whether the content is in SubRip format.
- * @param content The subtitle content
+ * @param content - The subtitle content
  * @returns Whether the content is in SubRip format
  */
 const detect = (content: string) => {
