@@ -83,7 +83,7 @@ class Subsrt implements SubsrtInterface {
      * @returns The built subtitle content
      */
     build = (captions: Caption[], options = {} as BuildOptions) => {
-        const format = options.format || "srt";
+        const format = options.format ?? "srt";
         if (!format || format.trim().length === 0) {
             throw new TypeError("Cannot determine subtitle format");
         }

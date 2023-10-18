@@ -56,7 +56,7 @@ const parse = (content: string, options: SUBParseOptions) => {
  * @see https://en.wikipedia.org/wiki/MicroDVD
  */
 const build = (captions: Caption[], options: SUBBuildOptions) => {
-    const fps = (options.fps ?? 0) > 0 ? options.fps! : DEFAULT_FPS;
+    const fps = options.fps && options.fps > 0 ? options.fps : DEFAULT_FPS;
 
     let sub = "";
     const eol = options.eol ?? "\r\n";
