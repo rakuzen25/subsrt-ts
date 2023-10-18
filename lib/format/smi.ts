@@ -28,7 +28,7 @@ const helper = {
      */
     htmlDecode: (html: string, eol: string) =>
         html
-            .replace(/<BR\s*\/?>/gi, eol || "\r\n")
+            .replace(/<BR\s*\/?>/gi, eol ?? "\r\n")
             .replace(/&nbsp;/g, " ")
             .replace(/&quot;/g, '"')
             .replace(/&#39;/g, "'")
@@ -161,7 +161,7 @@ const build = (captions: Caption[], options: SMIBuildOptions) => {
         if (!caption.type || caption.type === "caption") {
             // Start of caption
             content += `<SYNC Start=${caption.start}>${eol}`;
-            content += `  <P Class=LANG>${helper.htmlEncode(caption.text || "")}${options.closeTags ? "</P>" : ""}${eol}`;
+            content += `  <P Class=LANG>${helper.htmlEncode(caption.text ?? "")}${options.closeTags ? "</P>" : ""}${eol}`;
             if (options.closeTags) {
                 content += `</SYNC>${eol}`;
             }
