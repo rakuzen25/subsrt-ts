@@ -2369,8 +2369,8 @@ __metadata:
   linkType: hard
 
 "eslint-plugin-regexp@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "eslint-plugin-regexp@npm:2.0.0"
+  version: 2.1.0
+  resolution: "eslint-plugin-regexp@npm:2.1.0"
   dependencies:
     "@eslint-community/eslint-utils": ^4.2.0
     "@eslint-community/regexpp": ^4.9.1
@@ -2381,7 +2381,7 @@ __metadata:
     scslre: ^0.3.0
   peerDependencies:
     eslint: ">=8.44.0"
-  checksum: 2506c2b5d1502530c4c2534cc75d9794286dba2d75d6cf781c49fcdd53838efb243758b9a48292a99fe9c9856ce881ad9ede31c377f57ff26810d5758d42a2fa
+  checksum: b843071091093db482e8a81755e82a48823db0355c598ad5784fbd6caa75275ee441366ca3be368ab523b6690a26f33c1dc85f29bee01ed3c59320fc89d6ee77
   languageName: node
   linkType: hard
 
