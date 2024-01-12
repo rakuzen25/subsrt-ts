@@ -2326,8 +2326,8 @@ __metadata:
   linkType: hard
 
 "eslint-plugin-jest@npm:^27.2.1":
-  version: 27.6.2
-  resolution: "eslint-plugin-jest@npm:27.6.2"
+  version: 27.6.3
+  resolution: "eslint-plugin-jest@npm:27.6.3"
   dependencies:
     "@typescript-eslint/utils": ^5.10.0
   peerDependencies:
@@ -2339,7 +2339,7 @@ __metadata:
       optional: true
     jest:
       optional: true
-  checksum: 9f8f26c1ad0725f0d137152b932315fb7da0c327947c05fb9be7ce10bf3b82a6be158956261c1343be1138c571c4e445074afcbfd84ea2b34b3a550196e6c79d
+  checksum: 7ec6cc7b9b9e157963e004130908baadeb583b7b1b2ccd75dcc5084ca669edc0f75b9b92453b9bde234009359ac9fc6c5665b2c35bc2c8d332b944ddeef1c485
   languageName: node
   linkType: hard
 
@@ -4765,11 +4765,11 @@ __metadata:
   linkType: hard
 
 "prettier@npm:^3.0.0":
-  version: 3.1.1
-  resolution: "prettier@npm:3.1.1"
+  version: 3.2.1
+  resolution: "prettier@npm:3.2.1"
   bin:
     prettier: bin/prettier.cjs
-  checksum: facc944ba20e194ff4db765e830ffbcb642803381f0d2033ed397e79904fa4ccc877dc25ad68f42d36985c01d051c990ca1b905fb83d2d7d65fe69e4386fa1a3
+  checksum: e01284f25c1e9a96dfaf4f7d0bfdf0726b26afc732b0e645a2653174d4ad5a1e85ae21ec4d327c71536f1acf8fee1dff5ea35c5b4b8e5b83ff00fe1dd6fef146
   languageName: node
   linkType: hard
 
