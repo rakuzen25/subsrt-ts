@@ -4765,11 +4765,11 @@ __metadata:
   linkType: hard
 
 "prettier@npm:^3.0.0":
-  version: 3.2.1
-  resolution: "prettier@npm:3.2.1"
+  version: 3.2.2
+  resolution: "prettier@npm:3.2.2"
   bin:
     prettier: bin/prettier.cjs
-  checksum: e01284f25c1e9a96dfaf4f7d0bfdf0726b26afc732b0e645a2653174d4ad5a1e85ae21ec4d327c71536f1acf8fee1dff5ea35c5b4b8e5b83ff00fe1dd6fef146
+  checksum: e84d0d2a4ce2b88ee1636904effbdf68b59da63d9f887128f2ed5382206454185432e7c0a9578bc4308bc25d099cfef47fd0b9c211066777854e23e65e34044d
   languageName: node
   linkType: hard
 
@@ -5665,11 +5665,11 @@ __metadata:
   linkType: hard
 
 "typedoc-plugin-missing-exports@npm:^2.0.0":
-  version: 2.1.0
-  resolution: "typedoc-plugin-missing-exports@npm:2.1.0"
+  version: 2.2.0
+  resolution: "typedoc-plugin-missing-exports@npm:2.2.0"
   peerDependencies:
     typedoc: 0.24.x || 0.25.x
-  checksum: 65ba23913e389b473df770ad4b0e29cb1f90c9a11bc6f554863203618d5db23c5296686d03fb6b37dcad75e902d3f7711b5c6589a513cd0a2494f2440c170690
+  checksum: b5599e0a3ae901604b845f16d617bf965fd549eaef892e259439e91b4d9a8518662d6a4f8640604ef65ed2768c074c887e3a3e8a61dadb285019e3399dc21d90
   languageName: node
   linkType: hard
 
