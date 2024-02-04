@@ -34,10 +34,10 @@
     ],
     "scripts": {
         "format": "prettier --write . && eslint --fix .",
-        "lint": "eslint .",
+        "lint": "prettier --check . && eslint .",
         "build": "rm -rf dist && tsc --noEmitOnError",
-        "test": "pnpm node --experimental-vm-modules --es-module-specifier-resolution=node $(pnpm bin jest)",
-        "testCoverage": "pnpm node --experimental-vm-modules --es-module-specifier-resolution=node $(pnpm bin jest) --coverage=true --coverageReporters=cobertura",
+        "test": "NODE_OPTIONS=--experimental-vm-modules pnpm jest",
+        "testCoverage": "NODE_OPTIONS=--experimental-vm-modules pnpm jest --coverage=true --coverageReporters=cobertura",
         "docs": "pnpm typedoc --plugin typedoc-plugin-missing-exports lib/**.ts",
         "preversion": "pnpm run format && pnpm run lint && pnpm run build && pnpm run test",
         "prepublishOnly": "pnpm run test && pnpm run lint"
