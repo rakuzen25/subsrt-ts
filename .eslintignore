@@ -1,2 +1,5 @@
-dist
-test
+.DS_Store
+node_modules
+/dist
+/test
+pnpm-lock.yaml
