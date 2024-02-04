@@ -27,7 +27,7 @@ jobs:
               uses: actions/cache@v3
               with:
                   path: "**/node_modules"
-                  key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+                  key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
 
             - name: Set up Node.js
               uses: actions/setup-node@v4
@@ -38,10 +38,10 @@ jobs:
               uses: actions/configure-pages@v4
 
             - name: Install Node.js dependencies
-              run: yarn install --immutable
+              run: pnpm install --frozen-lockfile
 
             - name: Build docs
-              run: yarn docs
+              run: pnpm docs
 
             - name: Upload artifact
               uses: actions/upload-pages-artifact@v3

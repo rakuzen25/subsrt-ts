@@ -33,10 +33,10 @@ jobs:
                   registry-url: "https://registry.npmjs.org"
               if: ${{ steps.release.outputs.release_created }}
             - name: Install Node.js dependencies
-              run: yarn install --immutable
+              run: pnpm install --frozen-lockfile
               if: ${{ steps.release.outputs.release_created }}
             - name: Publish to npm
-              run: yarn npm publish
+              run: pnpm npm publish
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
               if: ${{ steps.release.outputs.release_created }}
