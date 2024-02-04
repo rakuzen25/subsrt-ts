@@ -29,8 +29,9 @@ jobs:
             - name: Set up Node.js
               uses: actions/setup-node@v4
               with:
-                  node-version: 18
+                  node-version: latest
                   registry-url: "https://registry.npmjs.org"
+                  cache: "pnpm"
               if: ${{ steps.release.outputs.release_created }}
             - name: Install Node.js dependencies
               run: pnpm install --frozen-lockfile
