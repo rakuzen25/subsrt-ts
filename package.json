@@ -24,7 +24,6 @@
     ],
     "license": "MIT",
     "type": "module",
-    "packageManager": "yarn@3.8.0",
     "main": "dist/subsrt.js",
     "bin": "bin/subsrt.js",
     "types": "dist/subsrt.d.ts",
@@ -35,13 +34,13 @@
     ],
     "scripts": {
         "format": "prettier --write . && eslint --fix .",
-        "lint": "eslint .",
+        "lint": "prettier --check . && eslint .",
         "build": "rm -rf dist && tsc --noEmitOnError",
-        "test": "yarn node --experimental-vm-modules --es-module-specifier-resolution=node $(yarn bin jest)",
-        "testCoverage": "yarn node --experimental-vm-modules --es-module-specifier-resolution=node $(yarn bin jest) --coverage=true --coverageReporters=cobertura",
-        "docs": "yarn typedoc --plugin typedoc-plugin-missing-exports lib/**.ts",
-        "preversion": "yarn run format && yarn run lint && yarn run build && yarn run test",
-        "prepublishOnly": "yarn run test && yarn run lint"
+        "test": "NODE_OPTIONS=--experimental-vm-modules pnpm jest",
+        "testCoverage": "NODE_OPTIONS=--experimental-vm-modules pnpm jest --coverage=true --coverageReporters=cobertura",
+        "docs": "pnpm typedoc --plugin typedoc-plugin-missing-exports lib/**.ts",
+        "preversion": "pnpm run format && pnpm run lint && pnpm run build && pnpm run test",
+        "prepublishOnly": "pnpm run test && pnpm run lint"
     },
     "repository": {
         "type": "git",

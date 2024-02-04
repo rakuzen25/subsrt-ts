@@ -23,25 +23,25 @@ jobs:
             - name: Check out Git repository
               uses: actions/checkout@v4
 
-            - name: Cache Node.js dependencies
-              uses: actions/cache@v3
+            - name: Set up pnpm
+              uses: pnpm/action-setup@v2
               with:
-                  path: "**/node_modules"
-                  key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+                  version: latest
 
             - name: Set up Node.js
               uses: actions/setup-node@v4
               with:
-                  node-version: 18
+                  node-version: latest
+                  cache: "pnpm"
 
             - name: Setup Pages
               uses: actions/configure-pages@v4
 
             - name: Install Node.js dependencies
-              run: yarn install --immutable
+              run: pnpm install --frozen-lockfile
 
             - name: Build docs
-              run: yarn docs
+              run: pnpm docs
 
             - name: Upload artifact
               uses: actions/upload-pages-artifact@v3

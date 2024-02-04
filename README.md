@@ -382,13 +382,13 @@ Download the source code from the GitHub repository.
 Install required packages if any
 
 ```console
-yarn install
+pnpm install
 ```
 
 Run the unit tests
 
 ```console
-yarn test
+pnpm test
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
