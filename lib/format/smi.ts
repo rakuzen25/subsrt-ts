@@ -45,10 +45,6 @@ const helper = {
  * @returns Parsed captions
  */
 const parse = (content: string, options: SMIParseOptions) => {
-    if (options.format && options.format !== FORMAT_NAME) {
-        throw new TypeError(`Invalid format: ${options.format}`);
-    }
-
     const captions = [];
     const eol = options.eol ?? "\r\n";
 

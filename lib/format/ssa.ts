@@ -68,76 +68,75 @@ const parse = (content: string, options: ParseOptions) => {
     for (const part of parts) {
         const regex = /^\s*\[([^\]]+)\]\r?\n([\s\S]*)$/;
         const match = regex.exec(part);
-        if (match) {
-            const tag = match[1];
-            const lines = match[2].split(/\r?\n/);
-            for (const line of lines) {
-                if (/^\s*;/.test(line)) {
-                    continue; // Skip comment
-                }
-                // FIXME: prevent backtracking
-                // eslint-disable-next-line regexp/no-super-linear-backtracking
-                const lineMatch = /^\s*([^\s:]+):\s*(.*)$/.exec(line);
-                if (!lineMatch) {
-                    continue;
-                }
-                if (tag === "Script Info") {
-                    if (!meta) {
-                        meta = {} as MetaCaption;
-                        meta.type = "meta";
-                        meta.data = {};
-                        captions.push(meta);
-                    }
-                    if (typeof meta.data === "object") {
-                        const name = lineMatch[1].trim();
-                        const value = lineMatch[2].trim();
-                        meta.data[name] = value;
-                    } else {
-                        throw new TypeError(`Invalid meta data: ${line}`);
-                    }
-                } else if (tag === "V4 Styles" || tag === "V4+ Styles") {
-                    const name = lineMatch[1].trim();
-                    const value = lineMatch[2].trim();
-                    if (name === "Format") {
-                        columns = value.split(/\s*,\s*/);
-                    } else if (name === "Style" && columns) {
-                        const values = value.split(/\s*,\s*/);
-                        const caption = {} as StyleCaption;
-                        caption.type = "style";
-                        caption.data = _buildCaptionData(columns, values);
-                        captions.push(caption);
-                    }
-                } else if (tag === "Events") {
-                    const name = lineMatch[1].trim();
-                    const value = lineMatch[2].trim();
-                    if (name === "Format") {
-                        columns = value.split(/\s*,\s*/);
-                    } else if (name === "Dialogue" && columns) {
-                        const values = value.split(/\s*,\s*/);
-                        const caption = {} as ContentCaption;
-                        caption.type = "caption";
-                        caption.data = _buildCaptionData(columns, values);
-                        caption.start = helper.toMilliseconds(caption.data.Start);
-                        caption.end = helper.toMilliseconds(caption.data.End);
-                        caption.duration = caption.end - caption.start;
-                        caption.content = caption.data.Text;
-
-                        // Work-around for missing text (when the text contains ',' char)
-                        const indexOfText = value.split(",", columns.length - 1).join(",").length + 1 + 1;
-                        caption.content = value.substring(indexOfText);
-                        caption.data.Text = caption.content;
-
-                        caption.text = caption.content
-                            .replace(/\\N/g, eol) // "\N" for new line
-                            .replace(/\{[^}]+\}/g, ""); // {\pos(400,570)}
-                        captions.push(caption);
-                    }
-                }
+        if (!match) {
+            if (options.verbose) {
+                console.warn("Unknown part", part);
             }
+            continue;
         }
 
-        if (options.verbose) {
-            console.warn("Unknown part", part);
+        const tag = match[1];
+        const lines = match[2].split(/\r?\n/);
+        for (const line of lines) {
+            if (/^\s*;/.test(line)) {
+                continue; // Skip comment
+            }
+            // FIXME: prevent backtracking
+            // eslint-disable-next-line regexp/no-super-linear-backtracking
+            const lineMatch = /^\s*([^\s:]+):\s*(.*)$/.exec(line);
+            if (!lineMatch) {
+                continue;
+            }
+            if (tag === "Script Info") {
+                if (!meta) {
+                    meta = {} as MetaCaption;
+                    meta.type = "meta";
+                    meta.data = {};
+                    captions.push(meta);
+                }
+                if (typeof meta.data === "object") {
+                    const name = lineMatch[1].trim();
+                    const value = lineMatch[2].trim();
+                    meta.data[name] = value;
+                }
+            } else if (tag === "V4 Styles" || tag === "V4+ Styles") {
+                const name = lineMatch[1].trim();
+                const value = lineMatch[2].trim();
+                if (name === "Format") {
+                    columns = value.split(/\s*,\s*/);
+                } else if (name === "Style" && columns) {
+                    const values = value.split(/\s*,\s*/);
+                    const caption = {} as StyleCaption;
+                    caption.type = "style";
+                    caption.data = _buildCaptionData(columns, values);
+                    captions.push(caption);
+                }
+            } else if (tag === "Events") {
+                const name = lineMatch[1].trim();
+                const value = lineMatch[2].trim();
+                if (name === "Format") {
+                    columns = value.split(/\s*,\s*/);
+                } else if (name === "Dialogue" && columns) {
+                    const values = value.split(/\s*,\s*/);
+                    const caption = {} as ContentCaption;
+                    caption.type = "caption";
+                    caption.data = _buildCaptionData(columns, values);
+                    caption.start = helper.toMilliseconds(caption.data.Start);
+                    caption.end = helper.toMilliseconds(caption.data.End);
+                    caption.duration = caption.end - caption.start;
+                    caption.content = caption.data.Text;
+
+                    // Work-around for missing text (when the text contains ',' char)
+                    const indexOfText = value.split(",", columns.length - 1).join(",").length + 1 + 1;
+                    caption.content = value.substring(indexOfText);
+                    caption.data.Text = caption.content;
+
+                    caption.text = caption.content
+                        .replace(/\\N/g, eol) // "\N" for new line
+                        .replace(/\{[^}]+\}/g, ""); // {\pos(400,570)}
+                    captions.push(caption);
+                }
+            }
         }
     }
     return captions;

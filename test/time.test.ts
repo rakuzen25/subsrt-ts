@@ -21,5 +21,10 @@ describe("Time", () => {
             const ms = toMilliseconds(str);
             expect(ms).toBe(value);
         }
+
+        // Test for invalid time
+        expect(() => {
+            toMilliseconds("Hello");
+        }).toThrow(TypeError);
     });
 });
