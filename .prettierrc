@@ -1,5 +1,13 @@
 {
     "printWidth": 150,
     "tabWidth": 4,
-    "trailingComma": "all"
+    "trailingComma": "all",
+    "overrides": [
+        {
+            "files": [".*rc"],
+            "options": {
+                "trailingComma": "none"
+            }
+        }
+    ]
 }

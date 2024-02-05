@@ -33,8 +33,8 @@
         "app.js"
     ],
     "scripts": {
-        "format": "prettier --write . && eslint --fix .",
-        "lint": "prettier --check . && eslint .",
+        "format": "prettier --write . && eslint --fix . && tsc --noEmit",
+        "lint": "prettier --check . && eslint . && tsc --noEmit",
         "build": "rm -rf dist && tsc --noEmitOnError",
         "test": "NODE_OPTIONS=--experimental-vm-modules pnpm jest",
         "testCoverage": "NODE_OPTIONS=--experimental-vm-modules pnpm jest --coverage=true --coverageReporters=cobertura",

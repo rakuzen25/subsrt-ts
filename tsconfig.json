@@ -1,14 +1,14 @@
 {
-    "exclude": ["test", "dist"],
     "compilerOptions": {
-        "rootDir": "lib",
-        "outDir": "dist",
-        "target": "es6",
+        "allowSyntheticDefaultImports": true,
+        "declaration": true,
         "lib": ["es2022", "dom"],
         "module": "es2022",
         "moduleResolution": "Node",
+        "outDir": "dist",
+        "rootDir": "lib",
         "strict": true,
-        "allowSyntheticDefaultImports": true,
-        "declaration": true
-    }
+        "target": "es6"
+    },
+    "exclude": ["test", "dist"]
 }

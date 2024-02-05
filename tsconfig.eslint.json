@@ -1,0 +1,8 @@
+{
+    "compilerOptions": {
+        "noEmit": true,
+        "types": ["@types/node", "jest"]
+    },
+    "exclude": ["dist"],
+    "extends": "./tsconfig.json"
+}
