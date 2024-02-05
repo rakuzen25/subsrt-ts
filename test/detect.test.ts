@@ -13,4 +13,13 @@ describe("Detect", () => {
 
         expect(actual).toBe(expected);
     });
+
+    test("should return an empty string when the format is not supported", () => {
+        expect(detect("Hello\nWorld")).toBe("");
+    });
+
+    test("should throw an error when the input is not a string", () => {
+        // @ts-expect-error For testing purposes
+        expect(() => detect(1)).toThrow(TypeError);
+    });
 });

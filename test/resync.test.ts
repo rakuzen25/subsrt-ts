@@ -46,7 +46,7 @@ describe("Resync", () => {
         expect((resynced[3] as ContentCaption).frame?.count).toBe((((captions[3] as ContentCaption)?.frame?.count ?? 0) * 30) / 25);
     });
 
-    test("should resync wtesth non-linear function", () => {
+    test("should resync with non-linear function", () => {
         const vtt = readFileSync("./test/fixtures/sample.vtt", "utf8");
         const captions = parse(vtt);
         const resynced = resync(captions, (a) => [
