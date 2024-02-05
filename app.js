@@ -164,7 +164,7 @@ const commands = {
     detect: () => {
         const content = readFileSync(config.src, "utf8");
         const format = _detect(content);
-        console.log(format || "unknown");
+        console.log(format ?? "unknown");
     },
     resync: () => {
         const options = {};

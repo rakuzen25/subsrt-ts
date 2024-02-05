@@ -12,7 +12,7 @@ describe("Resync", () => {
 
         expect(typeof resynced).toBe("object");
         expect(resynced.length).toBeGreaterThan(0);
-        expect(resynced.length).toBe(captions.length);
+        expect(resynced).toHaveLength(captions.length);
 
         expect((resynced[0] as ContentCaption).start).toBe((captions[0] as ContentCaption).start + 3000);
         expect((resynced[0] as ContentCaption).end).toBe((captions[0] as ContentCaption).end + 3000);
@@ -25,7 +25,7 @@ describe("Resync", () => {
 
         expect(typeof resynced).toBe("object");
         expect(resynced.length).toBeGreaterThan(0);
-        expect(resynced.length).toBe(captions.length);
+        expect(resynced).toHaveLength(captions.length);
 
         expect((resynced[3] as ContentCaption).start).toBe((captions[3] as ContentCaption).start - 250);
         expect((resynced[3] as ContentCaption).end).toBe((captions[3] as ContentCaption).end - 250);
@@ -33,17 +33,17 @@ describe("Resync", () => {
 
     test("should resync 25 to 30 FPS", () => {
         const sub = readFileSync("./test/fixtures/sample.sub", "utf8");
-        const captions = parse(sub, <SUBParseOptions>{ fps: 25 });
+        const captions = parse(sub, { fps: 25 } as SUBParseOptions);
         const resynced = resync(captions, { ratio: 30 / 25, frame: true });
 
         expect(typeof resynced).toBe("object");
         expect(resynced.length).toBeGreaterThan(0);
-        expect(resynced.length).toBe(captions.length);
+        expect(resynced).toHaveLength(captions.length);
 
         expect((resynced[3] as ContentCaption).frame).toBeDefined();
-        expect((resynced[3] as ContentCaption).frame?.start).toBe((((captions[3] as ContentCaption)?.frame?.start || 0) * 30) / 25);
-        expect((resynced[3] as ContentCaption).frame?.end).toBe((((captions[3] as ContentCaption)?.frame?.end || 0) * 30) / 25);
-        expect((resynced[3] as ContentCaption).frame?.count).toBe((((captions[3] as ContentCaption)?.frame?.count || 0) * 30) / 25);
+        expect((resynced[3] as ContentCaption).frame?.start).toBe((((captions[3] as ContentCaption)?.frame?.start ?? 0) * 30) / 25);
+        expect((resynced[3] as ContentCaption).frame?.end).toBe((((captions[3] as ContentCaption)?.frame?.end ?? 0) * 30) / 25);
+        expect((resynced[3] as ContentCaption).frame?.count).toBe((((captions[3] as ContentCaption)?.frame?.count ?? 0) * 30) / 25);
     });
 
     test("should resync wtesth non-linear function", () => {
@@ -56,7 +56,7 @@ describe("Resync", () => {
 
         expect(typeof resynced).toBe("object");
         expect(resynced.length).toBeGreaterThan(0);
-        expect(resynced.length).toBe(captions.length);
+        expect(resynced).toHaveLength(captions.length);
 
         expect((resynced[3] as ContentCaption).start).toBe((captions[3] as ContentCaption).start);
         expect((resynced[3] as ContentCaption).end).toBe((captions[3] as ContentCaption).end + 500);
