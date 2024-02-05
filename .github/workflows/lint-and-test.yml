@@ -36,7 +36,7 @@ jobs:
                   prettier: true
 
             - name: Run tests
-              run: pnpm testCoverage
+              run: pnpm run testCoverage
 
             - name: Report test coverage to DeepSource
               run: |

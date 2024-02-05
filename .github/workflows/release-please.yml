@@ -46,7 +46,7 @@ jobs:
               if: ${{ steps.release.outputs.release_created }}
 
             - name: Publish to npm
-              run: pnpm npm publish
+              run: pnpm publish
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
               if: ${{ steps.release.outputs.release_created }}
