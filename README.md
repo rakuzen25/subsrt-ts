@@ -6,11 +6,11 @@
 
 [![npm](https://img.shields.io/npm/v/subsrt-ts?logo=npm)](https://www.npmjs.com/package/subsrt-ts)
 [![npm](https://img.shields.io/npm/dt/subsrt-ts?logo=npm)](https://www.npmjs.com/package/subsrt-ts)
-[![Linting](https://img.shields.io/github/actions/workflow/status/leranjun/subsrt-ts/lint-and-test.yml?label=Lint%20and%20test&logo=github)](https://github.com/leranjun/subsrt-ts/actions/workflows/lint-and-test.yml)
-[![DeepSource](https://app.deepsource.com/gh/leranjun/subsrt-ts.svg/?label=active+issues&show_trend=true&token=VSYfXgJAchNJCwJhEqwVhMlh)](https://app.deepsource.com/gh/leranjun/subsrt-ts/?ref=repository-badge)
+[![Linting](https://img.shields.io/github/actions/workflow/status/rakuzen25/subsrt-ts/lint-and-test.yml?label=Lint%20and%20test&logo=github)](https://github.com/rakuzen25/subsrt-ts/actions/workflows/lint-and-test.yml)
+[![DeepSource](https://app.deepsource.com/gh/rakuzen25/subsrt-ts.svg/?label=active+issues&show_trend=true&token=VSYfXgJAchNJCwJhEqwVhMlh)](https://app.deepsource.com/gh/rakuzen25/subsrt-ts/?ref=repository-badge)
 
 <p align="center">
-<a href="https://leranjun.github.io/subsrt-ts/"><strong>Docs</strong></a>
+<a href="https://rakuzen25.github.io/subsrt-ts/"><strong>Docs</strong></a>
 ·
 <a href="https://www.npmjs.com/package/subsrt-ts">npm package</a>
 </p>

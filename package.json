@@ -18,7 +18,7 @@
         "json"
     ],
     "version": "2.1.2",
-    "author": "Leranjun",
+    "author": "Rakuzen25",
     "contributors": [
         "Papn Kukn"
     ],
@@ -44,10 +44,10 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/leranjun/subsrt-ts"
+        "url": "https://github.com/rakuzen25/subsrt-ts"
     },
     "bugs": {
-        "url": "https://github.com/leranjun/subsrt-ts/issues"
+        "url": "https://github.com/rakuzen25/subsrt-ts/issues"
     },
     "devDependencies": {
         "@types/jest": "^29.5.12",
