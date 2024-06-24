@@ -49,10 +49,10 @@ devDependencies:
     version: 29.1.5(@babel/core@7.23.9)(jest@29.7.0)(typescript@5.5.2)
   typedoc:
     specifier: ^0.26.0
-    version: 0.26.1(typescript@5.5.2)
+    version: 0.26.2(typescript@5.5.2)
   typedoc-plugin-missing-exports:
     specifier: ^2.2.0
-    version: 2.3.0(typedoc@0.26.1)
+    version: 2.3.0(typedoc@0.26.2)
   typescript:
     specifier: ^5.3.3
     version: 5.5.2
@@ -3820,16 +3820,16 @@ packages:
       is-typed-array: 1.1.13
     dev: true
 
-  /typedoc-plugin-missing-exports@2.3.0(typedoc@0.26.1):
+  /typedoc-plugin-missing-exports@2.3.0(typedoc@0.26.2):
     resolution: {integrity: sha512-iI9ITNNLlbsLCBBeYDyu0Qqp3GN/9AGyWNKg8bctRXuZEPT7G1L+0+MNWG9MsHcf/BFmNbXL0nQ8mC/tXRicog==}
     peerDependencies:
       typedoc: 0.24.x || 0.25.x
     dependencies:
-      typedoc: 0.26.1(typescript@5.5.2)
+      typedoc: 0.26.2(typescript@5.5.2)
     dev: true
 
-  /typedoc@0.26.1(typescript@5.5.2):
-    resolution: {integrity: sha512-APsVXqh93jTlpkLuw6+/IORx7n5LN8hzJV8nvMIrYYaIva0VCq0CoDN7Z3hsRThEYVExI/qoFHnAAxrhG+Wd7Q==}
+  /typedoc@0.26.2(typescript@5.5.2):
+    resolution: {integrity: sha512-q/t+M+PZqhN9gPWLBZ3CCvP+KT8O1tyYkSzEYbcQ6mo89avdIrMlBEl3vfo5BgSzwC6Lbmq0W64E8RkY+eVsLA==}
     engines: {node: '>= 18'}
     hasBin: true
     peerDependencies:
