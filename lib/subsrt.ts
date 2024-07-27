@@ -155,7 +155,7 @@ class Subsrt implements SubsrtInterface {
             offset = options; // Time shift (+/- offset)
             func = (a) => [a[0] + offset, a[1] + offset];
         } else {
-            offset = (options.offset ?? 0) * (options.frame ? options.fps ?? 25 : 1);
+            offset = (options.offset ?? 0) * (options.frame ? (options.fps ?? 25) : 1);
             ratio = options.ratio ?? 1.0;
             frame = options.frame ?? false;
             func = (a) => [Math.round(a[0] * ratio + offset), Math.round(a[1] * ratio + offset)];
