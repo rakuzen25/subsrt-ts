@@ -167,14 +167,14 @@ class Subsrt implements SubsrtInterface {
             if (!caption.type || caption.type === "caption") {
                 if (frame && caption.frame) {
                     const shift = func([caption.frame.start, caption.frame.end]);
-                    if (shift && shift.length === 2) {
+                    if (shift?.length === 2) {
                         caption.frame.start = shift[0];
                         caption.frame.end = shift[1];
                         caption.frame.count = caption.frame.end - caption.frame.start;
                     }
                 } else {
                     const shift = func([caption.start, caption.end]);
-                    if (shift && shift.length === 2) {
+                    if (shift?.length === 2) {
                         caption.start = shift[0];
                         caption.end = shift[1];
                         caption.duration = caption.end - caption.start;
