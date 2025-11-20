@@ -74,14 +74,14 @@ const srt = subsrt.convert(sub, { format: "srt", fps: 25 });
 
 ## Supported subtitle formats
 
--   [MicroDVD SUB](https://en.wikipedia.org/wiki/MicroDVD) (.sub)
--   [SubRip](https://en.wikipedia.org/wiki/SubRip) (.srt)
--   [SubViewer](https://en.wikipedia.org/wiki/SubViewer) (.sbv)
--   [WebVTT](https://w3c.github.io/webvtt/) (.vtt)
--   [SubStation Alpha](https://en.wikipedia.org/wiki/SubStation_Alpha) (.ssa and .ass)
--   [SAMI](https://en.wikipedia.org/wiki/SAMI) (.smi) aka Synchronized Accessible Media Interchange
--   [LRC](https://en.wikipedia.org/wiki/LRC_%28file_format%29) (.lrc) aka LyRiCs
--   JSON (.json)
+- [MicroDVD SUB](https://en.wikipedia.org/wiki/MicroDVD) (.sub)
+- [SubRip](https://en.wikipedia.org/wiki/SubRip) (.srt)
+- [SubViewer](https://en.wikipedia.org/wiki/SubViewer) (.sbv)
+- [WebVTT](https://w3c.github.io/webvtt/) (.vtt)
+- [SubStation Alpha](https://en.wikipedia.org/wiki/SubStation_Alpha) (.ssa and .ass)
+- [SAMI](https://en.wikipedia.org/wiki/SAMI) (.smi) aka Synchronized Accessible Media Interchange
+- [LRC](https://en.wikipedia.org/wiki/LRC_%28file_format%29) (.lrc) aka LyRiCs
+- JSON (.json)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -242,11 +242,11 @@ Example of output
 
 List of options
 
--   `format`: explicitly select a parser, values: `sub`, `srt`, `sbv`, `vtt`, `lrc`, `smi`, `ssa`, `ass`, `json`, default is undefined to auto detect
--   `verbose`: set to true for extra messages, console only, default: `false`
--   `eol`: end of line character(s), default: `\r\n`
--   `fps`: frames per second, `sub` format only
--   `preserveSpaces`: keep white space lines, `smi` format only
+- `format`: explicitly select a parser, values: `sub`, `srt`, `sbv`, `vtt`, `lrc`, `smi`, `ssa`, `ass`, `json`, default is undefined to auto detect
+- `verbose`: set to true for extra messages, console only, default: `false`
+- `eol`: end of line character(s), default: `\r\n`
+- `fps`: frames per second, `sub` format only
+- `preserveSpaces`: keep white space lines, `smi` format only
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -283,10 +283,10 @@ writeFileSync("generated.vtt", content);
 
 List of options
 
--   `format`: required, output subtitle format, values: `sub`, `srt`, `sbv`, `vtt`, `lrc`, `smi`, `ssa`, `ass`, `json`, default: `srt`
--   `verbose`: set to true for extra messages, console only, default: `false`
--   `fps`: frames per second, `sub` format only
--   `closeTags`: set to true to close tags, `smi` format only
+- `format`: required, output subtitle format, values: `sub`, `srt`, `sbv`, `vtt`, `lrc`, `smi`, `ssa`, `ass`, `json`, default: `srt`
+- `verbose`: set to true for extra messages, console only, default: `false`
+- `fps`: frames per second, `sub` format only
+- `closeTags`: set to true to close tags, `smi` format only
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -311,11 +311,11 @@ writeFileSync("converted.sbv", sbv);
 
 List of options
 
--   `format`: required, output subtitle format, values: `sub`, `srt`, `sbv`, `vtt`, `lrc`, `smi`, `ssa`, `ass`, `json`, default: `srt`
--   `verbose`: set to true for extra messages, console only, default: `false`
--   `eol`: end of line character(s), default: `\r\n`
--   `fps`: frames per second, `sub` format only
--   `resync`: resync options, see below
+- `format`: required, output subtitle format, values: `sub`, `srt`, `sbv`, `vtt`, `lrc`, `smi`, `ssa`, `ass`, `json`, default: `srt`
+- `verbose`: set to true for extra messages, console only, default: `false`
+- `eol`: end of line character(s), default: `\r\n`
+- `fps`: frames per second, `sub` format only
+- `resync`: resync options, see below
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
