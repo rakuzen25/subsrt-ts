@@ -127,7 +127,7 @@ const parse = (content: string, options: ParseOptions) => {
                     caption.content = caption.data.Text;
 
                     // Work-around for missing text (when the text contains ',' char)
-                    const indexOfText = value.split(",", columns.length - 1).join(",").length + 1 + 1;
+                    const indexOfText = value.split(",", columns.length - 1).join(",").length + 1;
                     caption.content = value.substring(indexOfText);
                     caption.data.Text = caption.content;
 
