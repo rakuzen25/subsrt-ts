@@ -35,7 +35,7 @@ jobs:
         uses: actions/configure-pages@v5
 
       - name: Install Node.js dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install
 
       - name: Build docs
         run: pnpm run docs
