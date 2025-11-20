@@ -1,52 +1,52 @@
 on:
-    push:
-        branches:
-            - main
+  push:
+    branches:
+      - main
 
 permissions:
-    contents: write
-    pull-requests: write
+  contents: write
+  pull-requests: write
 
 name: Release Please
 
 jobs:
-    release-please:
-        name: Release Please
-        runs-on: ubuntu-latest
-        steps:
-            - name: Run Release Please
-              id: release
-              uses: googleapis/release-please-action@v3
-              with:
-                  release-type: node
-                  package-name: subsrt-ts
+  release-please:
+    name: Release Please
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Release Please
+        id: release
+        uses: googleapis/release-please-action@v3
+        with:
+          release-type: node
+          package-name: subsrt-ts
 
-            # The logic below handles the npm publication:
-            - name: Check out Git repository
-              uses: actions/checkout@v4
-              # these if statements ensure that a publication only occurs when
-              # a new release is created:
-              if: ${{ steps.release.outputs.release_created }}
+      # The logic below handles the npm publication:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+        # these if statements ensure that a publication only occurs when
+        # a new release is created:
+        if: ${{ steps.release.outputs.release_created }}
 
-            - name: Set up pnpm
-              uses: pnpm/action-setup@v2
-              with:
-                  version: latest
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
 
-            - name: Set up Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: latest
-                  registry-url: "https://registry.npmjs.org"
-                  cache: "pnpm"
-              if: ${{ steps.release.outputs.release_created }}
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: latest
+          registry-url: "https://registry.npmjs.org"
+          cache: "pnpm"
+        if: ${{ steps.release.outputs.release_created }}
 
-            - name: Install Node.js dependencies
-              run: pnpm install --frozen-lockfile
-              if: ${{ steps.release.outputs.release_created }}
+      - name: Install Node.js dependencies
+        run: pnpm install --frozen-lockfile
+        if: ${{ steps.release.outputs.release_created }}
 
-            - name: Publish to npm
-              run: pnpm publish
-              env:
-                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-              if: ${{ steps.release.outputs.release_created }}
+      - name: Publish to npm
+        run: pnpm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        if: ${{ steps.release.outputs.release_created }}
