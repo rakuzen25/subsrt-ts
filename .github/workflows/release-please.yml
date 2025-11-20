@@ -16,7 +16,7 @@ jobs:
         steps:
             - name: Run Release Please
               id: release
-              uses: google-github-actions/release-please-action@v3
+              uses: googleapis/release-please-action@v3
               with:
                   release-type: node
                   package-name: subsrt-ts
