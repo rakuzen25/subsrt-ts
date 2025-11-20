@@ -11,17 +11,16 @@ jobs:
 
         steps:
             - name: Check out Git repository
-              uses: actions/checkout@v4
+              uses: actions/checkout@v5
+              with:
+                  ref: ${{ github.event.pull_request.head.sha }}
 
             - name: Set up pnpm
-              uses: pnpm/action-setup@v2
-              with:
-                  version: latest
+              uses: pnpm/action-setup@v4
 
             - name: Set up Node.js
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@v6
               with:
-                  node-version: latest
                   cache: "pnpm"
 
             - name: Install Node.js dependencies
@@ -39,9 +38,8 @@ jobs:
               run: pnpm run testCoverage
 
             - name: Report test coverage to DeepSource
-              run: |
-                  curl https://deepsource.io/cli | sh
-
-                  ./bin/deepsource report --analyzer test-coverage --key javascript --value-file ./coverage/cobertura-coverage.xml
               env:
                   DEEPSOURCE_DSN: ${{ secrets.DEEPSOURCE_DSN }}
+              run: |
+                  curl https://deepsource.io/cli | sh
+                  ./bin/deepsource report --analyzer test-coverage --key javascript --value-file ./coverage/cobertura-coverage.xml
