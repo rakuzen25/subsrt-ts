@@ -34,7 +34,7 @@ const detect = (content: string) => {
     try {
         const res = JSON.parse(content) as unknown;
         return Array.isArray(res) && res.length > 0 && typeof res[0] === "object";
-    } catch (e) {
+    } catch (_) {
         return false;
     }
 };

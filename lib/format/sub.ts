@@ -14,7 +14,7 @@ const DEFAULT_FPS = 25;
  * @see https://en.wikipedia.org/wiki/MicroDVD
  */
 const parse = (content: string, options: SUBParseOptions) => {
-    options.fps ||= DEFAULT_FPS;
+    options.fps ??= DEFAULT_FPS;
     const fps = options.fps > 0 ? options.fps : DEFAULT_FPS;
     const captions = [];
     const eol = options.eol ?? "\r\n";
