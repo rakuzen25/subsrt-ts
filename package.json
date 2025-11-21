@@ -49,6 +49,9 @@
     "bugs": {
         "url": "https://github.com/rakuzen25/subsrt-ts/issues"
     },
+    "publishConfig": {
+        "provenance": true
+    },
     "devDependencies": {
         "@eslint/eslintrc": "^3.3.1",
         "@eslint/js": "^9.39.1",
