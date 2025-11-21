@@ -38,11 +38,8 @@ jobs:
         run: pnpm run testCoverage
 
       - name: Report test coverage to DeepSource
-        env:
-          DEEPSOURCE_DSN: ${{ secrets.DEEPSOURCE_DSN }}
-        run: |
-          curl https://deepsource.io/cli | sh
-          ls -R coverage/
-          ./bin/deepsource --version
-          ./bin/deepsource report --analyzer test-coverage --key javascript --value-file ./coverage/cobertura-coverage.xml
-        continue-on-error: true
+        uses: deepsourcelabs/test-coverage-action@master
+        with:
+          key: javascript
+          coverage-file: ./coverage/cobertura-coverage.xml
+          dsn: ${{ secrets.DEEPSOURCE_DSN }}
