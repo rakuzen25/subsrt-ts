@@ -33,8 +33,8 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v6
         with:
-          registry-url: "https://registry.npmjs.org"
           cache: "pnpm"
+          registry-url: "https://registry.npmjs.org"
         if: ${{ steps.release.outputs.release_created }}
 
       - name: Install Node.js dependencies
@@ -42,5 +42,5 @@ jobs:
         if: ${{ steps.release.outputs.release_created }}
 
       - name: Publish to npm
-        run: npm publish
+        run: npm publish --provenance
         if: ${{ steps.release.outputs.release_created }}
