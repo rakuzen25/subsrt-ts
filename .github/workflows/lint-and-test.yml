@@ -42,5 +42,7 @@ jobs:
           DEEPSOURCE_DSN: ${{ secrets.DEEPSOURCE_DSN }}
         run: |
           curl https://deepsource.io/cli | sh
+          ls -R coverage/
+          ./bin/deepsource --version
           ./bin/deepsource report --analyzer test-coverage --key javascript --value-file ./coverage/cobertura-coverage.xml
         continue-on-error: true
