@@ -23,7 +23,7 @@ jobs:
           release-type: node
 
       - name: Check out Git repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         if: ${{ steps.release.outputs.release_created }}
 
       - name: Set up pnpm
