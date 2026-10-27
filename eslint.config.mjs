@@ -1,19 +1,18 @@
 import js from "@eslint/js";
 import { defineConfig } from "eslint/config";
 import prettierConfig from "eslint-config-prettier";
-import importPlugin from "eslint-plugin-import";
+import { importX } from "eslint-plugin-import-x";
 import jestPlugin from "eslint-plugin-jest";
-import regexpPlugin from "eslint-plugin-regexp";
+import { configs as regexpConfigs } from "eslint-plugin-regexp";
 import tsdocPlugin from "eslint-plugin-tsdoc";
 import globals from "globals";
 import { configs, parser } from "typescript-eslint";
 
 export default defineConfig(
     js.configs.recommended,
-    importPlugin.flatConfigs.recommended,
-    importPlugin.flatConfigs.typescript,
-    regexpPlugin.configs["flat/recommended"],
-    prettierConfig,
+    importX.flatConfigs.recommended,
+    importX.flatConfigs.typescript,
+    regexpConfigs["flat/recommended"],
     {
         languageOptions: {
             ecmaVersion: "latest",
@@ -31,10 +30,10 @@ export default defineConfig(
             tsdoc: tsdocPlugin,
         },
         settings: {
-            "import/parsers": {
+            "import-x/parsers": {
                 "@typescript-eslint/parser": [".ts", ".tsx"],
             },
-            "import/resolver": {
+            "import-x/resolver": {
                 typescript: {
                     alwaysTryTypes: true,
                     project: "./tsconfig.eslint.json",
@@ -68,7 +67,7 @@ export default defineConfig(
             "require-await": "error",
             "sort-imports": ["error", { ignoreCase: true, ignoreDeclarationSort: true }],
             "tsdoc/syntax": "warn",
-            "import/order": [
+            "import-x/order": [
                 "error",
                 {
                     alphabetize: { caseInsensitive: true, order: "asc" },
@@ -76,6 +75,12 @@ export default defineConfig(
                     "newlines-between": "always",
                 },
             ],
+        },
+    },
+    {
+        files: ["app.js"],
+        rules: {
+            "import-x/no-unresolved": ["error", { ignore: ["^\\./dist/"] }],
         },
     },
     {
@@ -120,4 +125,5 @@ export default defineConfig(
     {
         ignores: ["dist", ".DS_Store", "pnpm-lock.yaml"],
     },
+    prettierConfig,
 );

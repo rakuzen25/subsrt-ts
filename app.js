@@ -1,7 +1,6 @@
 import { readFileSync, writeFileSync } from "fs";
 import { extname } from "path";
 
-// eslint-disable-next-line import/no-unresolved
 import { build as _build, convert as _convert, detect as _detect, list as _list, parse as _parse } from "./dist/subsrt.js";
 
 const config = {

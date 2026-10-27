@@ -13,20 +13,21 @@ jobs:
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Set up pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
 
       - name: Set up Node.js
         uses: actions/setup-node@v6
         with:
+          node-version: "24"
           cache: "pnpm"
 
       - name: Install Node.js dependencies
-        run: pnpm install
+        run: pnpm ci
 
       - name: Run linters
         uses: wearerequired/lint-action@v2
@@ -38,6 +39,11 @@ jobs:
 
       - name: Run tests
         run: pnpm run testCoverage
+
+      - name: Check types and package contents
+        run: |
+          pnpm exec tsc --noEmit
+          npm pack --dry-run
 
       - name: Report test coverage to DeepSource
         uses: deepsourcelabs/test-coverage-action@master

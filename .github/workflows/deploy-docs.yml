@@ -6,8 +6,12 @@ on:
     paths:
       - "**.js"
       - "**.ts"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/deploy-docs.yml"
 
 permissions:
+  contents: read
   pages: write
   id-token: write
 
@@ -21,27 +25,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Set up pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
 
       - name: Set up Node.js
         uses: actions/setup-node@v6
         with:
+          node-version: "24"
           cache: "pnpm"
 
       - name: Setup Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
 
       - name: Install Node.js dependencies
-        run: pnpm install
+        run: pnpm ci
 
       - name: Build docs
         run: pnpm run docs
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v5
         with:
           path: docs/
 
@@ -55,4 +60,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5

@@ -35,12 +35,13 @@
     "scripts": {
         "format": "prettier --write . && eslint --fix . && tsc --noEmit",
         "lint": "prettier --check . && eslint . && tsc --noEmit",
-        "build": "rm -rf dist && tsc --noEmitOnError",
-        "test": "NODE_OPTIONS=--experimental-vm-modules pnpm jest",
-        "testCoverage": "NODE_OPTIONS=--experimental-vm-modules pnpm jest --coverage=true --coverageReporters=cobertura",
+        "build": "node --input-type=module -e \"import { rmSync } from 'node:fs'; rmSync('dist', { recursive: true, force: true });\" && tsc --noEmitOnError",
+        "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+        "testCoverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage=true --coverageReporters=cobertura",
         "docs": "pnpm typedoc --plugin typedoc-plugin-missing-exports lib/**.ts",
         "preversion": "pnpm run format && pnpm run lint && pnpm run build && pnpm run test",
-        "prepublishOnly": "pnpm run test && pnpm run lint"
+        "prepublishOnly": "pnpm run test && pnpm run lint",
+        "prepack": "pnpm run build"
     },
     "repository": {
         "type": "git",
@@ -50,25 +51,28 @@
         "url": "https://github.com/rakuzen25/subsrt-ts/issues"
     },
     "devDependencies": {
-        "@eslint/eslintrc": "^3.3.1",
-        "@eslint/js": "^9.39.1",
+        "@eslint/eslintrc": "^3.3.7",
+        "@eslint/js": "^10.0.1",
         "@types/jest": "^30.0.0",
-        "@types/node": "^24.10.1",
-        "eslint": "^9.0.0",
+        "@types/node": "^24.19.2",
+        "eslint": "^10.13.0",
         "eslint-config-prettier": "^10.1.8",
-        "eslint-import-resolver-typescript": "^4.4.4",
-        "eslint-plugin-import": "^2.29.1",
-        "eslint-plugin-jest": "^29.1.0",
-        "eslint-plugin-regexp": "^2.2.0",
-        "eslint-plugin-tsdoc": "^0.5.0",
-        "globals": "^16.5.0",
-        "jest": "^30.2.0",
-        "prettier": "^3.2.5",
-        "ts-jest": "^29.1.2",
-        "typedoc": "^0.28.0",
-        "typedoc-plugin-missing-exports": "^4.0.0",
-        "typescript": "^5.3.3",
-        "typescript-eslint": "^8.47.0"
+        "eslint-import-resolver-typescript": "^4.4.5",
+        "eslint-plugin-import-x": "^4.17.1",
+        "eslint-plugin-jest": "^29.17.0",
+        "eslint-plugin-regexp": "^3.3.1",
+        "eslint-plugin-tsdoc": "^0.5.4",
+        "globals": "^17.13.0",
+        "jest": "^30.5.2",
+        "prettier": "^3.9.10",
+        "ts-jest": "^29.4.15",
+        "typedoc": "^0.28.20",
+        "typedoc-plugin-missing-exports": "^4.1.4",
+        "typescript": "^5.9.3",
+        "typescript-eslint": "^8.72.1"
     },
-    "packageManager": "pnpm@10.23.0"
+    "publishConfig": {
+        "provenance": true
+    },
+    "packageManager": "pnpm@10.34.9"
 }

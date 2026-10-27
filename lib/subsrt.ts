@@ -144,7 +144,7 @@ class Subsrt implements SubsrtInterface {
      * @returns The resynced captions
      */
     // skipcq: JS-0105
-    resync = (captions: Caption[], options: ResyncFunction | number | ResyncOptions = {} as ResyncOptions) => {
+    resync = (captions: Caption[], options: ResyncFunction | number | ResyncOptions = {}) => {
         let func: ResyncFunction,
             ratio: number,
             frame = false,
