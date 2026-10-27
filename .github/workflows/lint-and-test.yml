@@ -42,7 +42,7 @@ jobs:
 
       - name: Check types and package contents
         run: |
-          pnpm exec tsc --noEmit
+          pnpm exec tsc --noEmit -p tsconfig.eslint.json
           npm pack --dry-run
 
       - name: Report test coverage to DeepSource

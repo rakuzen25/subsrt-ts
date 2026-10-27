@@ -1,7 +1,7 @@
 import { readFileSync } from "fs";
 
-import { convert, detect, list, parse } from "../lib/subsrt";
-import { ContentCaption } from "../lib/types/handler";
+import { convert, detect, list, parse } from "../lib/subsrt.js";
+import { ContentCaption } from "../lib/types/handler.js";
 
 describe("Convert", () => {
     const extensions = list();

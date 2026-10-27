@@ -1,4 +1,4 @@
-import { format, list } from "../lib/subsrt";
+import { format, list } from "../lib/subsrt.js";
 
 describe("Time", () => {
     const formats = list();

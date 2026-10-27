@@ -3,8 +3,8 @@ import { defineConfig } from "eslint/config";
 import prettierConfig from "eslint-config-prettier";
 import { importX } from "eslint-plugin-import-x";
 import jestPlugin from "eslint-plugin-jest";
+import jsdocPlugin from "eslint-plugin-jsdoc";
 import { configs as regexpConfigs } from "eslint-plugin-regexp";
-import tsdocPlugin from "eslint-plugin-tsdoc";
 import globals from "globals";
 import { configs, parser } from "typescript-eslint";
 
@@ -27,9 +27,12 @@ export default defineConfig(
             },
         },
         plugins: {
-            tsdoc: tsdocPlugin,
+            jsdoc: jsdocPlugin,
         },
         settings: {
+            jsdoc: {
+                mode: "typescript",
+            },
             "import-x/parsers": {
                 "@typescript-eslint/parser": [".ts", ".tsx"],
             },
@@ -66,7 +69,8 @@ export default defineConfig(
             "require-atomic-updates": "error",
             "require-await": "error",
             "sort-imports": ["error", { ignoreCase: true, ignoreDeclarationSort: true }],
-            "tsdoc/syntax": "warn",
+            "jsdoc/check-param-names": ["error", { checkDestructured: false }],
+            "jsdoc/valid-types": "error",
             "import-x/order": [
                 "error",
                 {

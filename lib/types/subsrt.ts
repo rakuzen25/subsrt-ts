@@ -1,6 +1,6 @@
 import { Handler } from "../handler.js";
 
-import { BaseHandler, Caption, ConvertOptions, ResyncOptions } from "./handler";
+import { BaseHandler, Caption, ConvertOptions, ResyncOptions } from "./handler.js";
 
 export type ResyncFunction = (a: number[]) => number[];
 

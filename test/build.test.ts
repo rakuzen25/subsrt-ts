@@ -1,7 +1,7 @@
 import { readFileSync } from "fs";
 
-import { build, list, parse } from "../lib/subsrt";
-import { BuildOptions, Caption } from "../lib/types/handler";
+import { build, list, parse } from "../lib/subsrt.js";
+import { BuildOptions, Caption } from "../lib/types/handler.js";
 
 describe("Build", () => {
     const formats = list();

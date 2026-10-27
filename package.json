@@ -33,12 +33,12 @@
         "app.js"
     ],
     "scripts": {
-        "format": "prettier --write . && eslint --fix . && tsc --noEmit",
-        "lint": "prettier --check . && eslint . && tsc --noEmit",
+        "format": "prettier --write . && eslint --fix . && tsc --noEmit -p tsconfig.eslint.json",
+        "lint": "prettier --check . && eslint . && tsc --noEmit -p tsconfig.eslint.json",
         "build": "node --input-type=module -e \"import { rmSync } from 'node:fs'; rmSync('dist', { recursive: true, force: true });\" && tsc --noEmitOnError",
         "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
         "testCoverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage=true --coverageReporters=cobertura",
-        "docs": "pnpm typedoc --plugin typedoc-plugin-missing-exports lib/**.ts",
+        "docs": "typedoc --plugin typedoc-plugin-missing-exports --treatWarningsAsErrors lib/**.ts",
         "preversion": "pnpm run format && pnpm run lint && pnpm run build && pnpm run test",
         "prepublishOnly": "pnpm run test && pnpm run lint",
         "prepack": "pnpm run build"
@@ -51,7 +51,6 @@
         "url": "https://github.com/rakuzen25/subsrt-ts/issues"
     },
     "devDependencies": {
-        "@eslint/eslintrc": "^3.3.7",
         "@eslint/js": "^10.0.1",
         "@types/jest": "^30.0.0",
         "@types/node": "^26.6.5",
@@ -60,15 +59,15 @@
         "eslint-import-resolver-typescript": "^4.4.5",
         "eslint-plugin-import-x": "^4.17.1",
         "eslint-plugin-jest": "^29.17.0",
+        "eslint-plugin-jsdoc": "^65.4.2",
         "eslint-plugin-regexp": "^3.3.1",
-        "eslint-plugin-tsdoc": "^0.5.4",
         "globals": "^17.13.0",
         "jest": "^30.5.2",
         "prettier": "^3.9.10",
         "ts-jest": "^29.4.15",
         "typedoc": "^0.28.20",
         "typedoc-plugin-missing-exports": "^4.1.4",
-        "typescript": "^5.9.3",
+        "typescript": "^6.0.3",
         "typescript-eslint": "^8.72.1"
     },
     "publishConfig": {

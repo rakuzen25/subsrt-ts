@@ -1,6 +1,6 @@
 import { readFileSync } from "fs";
 
-import { detect, list } from "../lib/subsrt";
+import { detect, list } from "../lib/subsrt.js";
 
 describe("Detect", () => {
     const formats = list();

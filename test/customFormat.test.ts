@@ -1,5 +1,5 @@
-import { build, convert, detect, format, parse, resync } from "../lib/subsrt";
-import { ContentCaption } from "../lib/types/handler";
+import { build, convert, detect, format, parse, resync } from "../lib/subsrt.js";
+import { ContentCaption } from "../lib/types/handler.js";
 
 describe("Custom format", () => {
     beforeAll(() => {

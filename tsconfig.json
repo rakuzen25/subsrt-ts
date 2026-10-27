@@ -1,14 +1,14 @@
 {
     "compilerOptions": {
-        "allowSyntheticDefaultImports": true,
         "declaration": true,
+        "isolatedModules": true,
         "lib": ["es2022", "dom"],
-        "module": "es2022",
-        "moduleResolution": "Node",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
         "outDir": "dist",
         "rootDir": "lib",
         "strict": true,
-        "target": "es6"
+        "target": "ES2022"
     },
     "exclude": ["test", "dist"]
 }

@@ -1,8 +1,8 @@
 import { readFileSync } from "fs";
 
-import { SUBParseOptions } from "../lib/format/types/sub";
-import { parse, resync } from "../lib/subsrt";
-import { ContentCaption } from "../lib/types/handler";
+import { SUBParseOptions } from "../lib/format/types/sub.js";
+import { parse, resync } from "../lib/subsrt.js";
+import { ContentCaption } from "../lib/types/handler.js";
 
 describe("Resync", () => {
     test("should resync +3000 ms", () => {
