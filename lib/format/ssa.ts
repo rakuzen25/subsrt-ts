@@ -61,10 +61,12 @@ const _buildCaptionData = (columns: string[], values: string[]) => {
  */
 const parse = (content: string, options: ParseOptions) => {
     let meta;
-    let columns = null;
+    let styleColumns = null;
+    let eventColumns = null;
     const captions = [];
     const eol = options.eol ?? "\r\n";
-    const parts = content.split(/\r?\n\s*\n/);
+    // Blank lines are valid within sections; only section headers start a new part.
+    const parts = content.split(/(?=^[\t ]*\[[^\]\r\n]+\]\r?$)/m);
     for (const part of parts) {
         const regex = /^\s*\[([^\]]+)\]\r?\n([\s\S]*)$/;
         const match = regex.exec(part);
@@ -103,31 +105,31 @@ const parse = (content: string, options: ParseOptions) => {
                 const name = lineMatch[1].trim();
                 const value = lineMatch[2].trim();
                 if (name === "Format") {
-                    columns = value.split(/\s*,\s*/);
-                } else if (name === "Style" && columns) {
+                    styleColumns = value.split(/\s*,\s*/);
+                } else if (name === "Style" && styleColumns) {
                     const values = value.split(/\s*,\s*/);
                     const caption = {} as StyleCaption;
                     caption.type = "style";
-                    caption.data = _buildCaptionData(columns, values);
+                    caption.data = _buildCaptionData(styleColumns, values);
                     captions.push(caption);
                 }
             } else if (tag === "Events") {
                 const name = lineMatch[1].trim();
                 const value = lineMatch[2].trim();
                 if (name === "Format") {
-                    columns = value.split(/\s*,\s*/);
-                } else if (name === "Dialogue" && columns) {
+                    eventColumns = value.split(/\s*,\s*/);
+                } else if (name === "Dialogue" && eventColumns) {
                     const values = value.split(/\s*,\s*/);
                     const caption = {} as ContentCaption;
                     caption.type = "caption";
-                    caption.data = _buildCaptionData(columns, values);
+                    caption.data = _buildCaptionData(eventColumns, values);
                     caption.start = helper.toMilliseconds(caption.data.Start);
                     caption.end = helper.toMilliseconds(caption.data.End);
                     caption.duration = caption.end - caption.start;
                     caption.content = caption.data.Text;
 
                     // Work-around for missing text (when the text contains ',' char)
-                    const indexOfText = value.split(",", columns.length - 1).join(",").length + 1;
+                    const indexOfText = value.split(",", eventColumns.length - 1).join(",").length + 1;
                     caption.content = value.substring(indexOfText);
                     caption.data.Text = caption.content;
 
