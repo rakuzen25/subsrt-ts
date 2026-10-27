@@ -104,7 +104,7 @@ class Subsrt implements SubsrtInterface {
     /**
      * Converts subtitle format.
      * @param content - The subtitle content
-     * @param options - The conversion options
+     * @param _options - The conversion options or destination format
      * @returns The converted subtitle content
      */
     convert = (content: string, _options: ConvertOptions | string = {} as ConvertOptions) => {
