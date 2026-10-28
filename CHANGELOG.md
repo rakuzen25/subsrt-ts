@@ -2,12 +2,11 @@
 
 ## [2.1.3](https://github.com/rakuzen25/subsrt-ts/compare/v2.1.2...v2.1.3) (2026-10-28)
 
-
 ### Bug Fixes
 
-* fix blank line handling ([#371](https://github.com/rakuzen25/subsrt-ts/issues/371)) ([a989e17](https://github.com/rakuzen25/subsrt-ts/commit/a989e17383d58afcd8808cf5e215c1f976f65ba5))
-* fix index calculation for caption content extraction ([#334](https://github.com/rakuzen25/subsrt-ts/issues/334)) ([e3dbcdc](https://github.com/rakuzen25/subsrt-ts/commit/e3dbcdce864ec70910d7e16ded60221598d98dac))
-* fix other known issues ([5ed9266](https://github.com/rakuzen25/subsrt-ts/commit/5ed92666b0967267129fe766c9def03bc7ce4853))
+- fix blank line handling ([#371](https://github.com/rakuzen25/subsrt-ts/issues/371)) ([a989e17](https://github.com/rakuzen25/subsrt-ts/commit/a989e17383d58afcd8808cf5e215c1f976f65ba5))
+- fix index calculation for caption content extraction ([#334](https://github.com/rakuzen25/subsrt-ts/issues/334)) ([e3dbcdc](https://github.com/rakuzen25/subsrt-ts/commit/e3dbcdce864ec70910d7e16ded60221598d98dac))
+- fix other known issues ([5ed9266](https://github.com/rakuzen25/subsrt-ts/commit/5ed92666b0967267129fe766c9def03bc7ce4853))
 
 ## [2.1.2](https://github.com/rakuzen25/subsrt-ts/compare/v2.1.1...v2.1.2) (2023-10-17)
 
