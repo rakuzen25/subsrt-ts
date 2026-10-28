@@ -24,7 +24,8 @@ describe("Convert", () => {
 
         const captions = parse(content2, { format: ext2 });
         expect(typeof captions).not.toBe("undefined");
-        expect(captions.length).toBeGreaterThan(0);
+        const subtitleCaptions = ext2 === "smi" || ext2 === "vtt" ? captions.filter((caption) => caption.type === "caption") : captions;
+        expect(subtitleCaptions.length).toBeGreaterThan(0);
 
         // String "to" format as second argument
         const content3 = convert(content1, ext2);

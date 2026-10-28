@@ -90,7 +90,8 @@ const parse = (content: string, options: SMIParseOptions) => {
             caption.content = match[2].replace(/^<\/SYNC[^>]*>/gi, "");
 
             let blank = true;
-            const pMatch = /^<P.+Class\s*=\s*["']?([\w-]+)(?: .*)?>([\s\S]*)/i.exec(caption.content) ?? /^<P([^>]*)>([\s\S]*)/i.exec(caption.content);
+            const pMatch =
+                /^\s*<P.+Class\s*=\s*["']?([\w-]+)(?: .*)?>([\s\S]*)/i.exec(caption.content) ?? /^\s*<P([^>]*)>([\s\S]*)/i.exec(caption.content);
             if (pMatch) {
                 let html = pMatch[2].replace(/<P[\s\S]+$/gi, ""); // Remove string after another <P> tag
                 html = html
@@ -197,7 +198,12 @@ const detect = (content: string) => {
     </BODY>
     </SAMI>
     */
-    return /<SAMI[^>]*>[\s\S]*<BODY[^>]*>/.test(content);
+    if (/<SAMI[^>]*>[\s\S]*<BODY[^>]*>/.test(content)) {
+        return true;
+    }
+
+    const sync = /^\s*<SYNC\b([^>]*)>\s*<P(?:\s[^>]*)?>/i.exec(content);
+    return sync !== null && /(?:^|\s)Start\s*=\s*(?:"\d+"|'\d+'|\d+)(?=\s|$)/i.test(sync[1]);
 };
 
 export default buildHandler({ name: FORMAT_NAME, build, detect, helper, parse });

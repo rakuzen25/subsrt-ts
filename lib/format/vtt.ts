@@ -40,6 +40,34 @@ const helper = {
 };
 
 /**
+ * Splits WebVTT blocks without treating whitespace-only payload lines as separators.
+ * @param content - The subtitle content
+ * @returns The subtitle blocks
+ */
+const splitBlocks = (content: string) => {
+    const parts: string[] = [];
+    const timing = /^(?:\d{1,2}:)?\d{1,2}:\d{1,2}(?:[.,]\d{1,3})?[\t ]*-->[\t ]*(?:\d{1,2}:)?\d{1,2}:\d{1,2}(?:[.,]\d{1,3})?(?:[\t ][^\r\n]*)?$/;
+    let start = 0;
+    for (const separator of content.matchAll(/\r?\n(?:[^\S\r\n]*\r?\n)+/g)) {
+        const end = separator.index + separator[0].length;
+        const emptyLine = /\r?\n\r?\n/.exec(separator[0]);
+        if (emptyLine) {
+            // Keep payload padding that precedes the first genuinely empty line.
+            parts.push(content.slice(start, separator.index + emptyLine.index));
+        } else {
+            const [first, second] = content.slice(end).split(/\r?\n/, 2);
+            if (!timing.test(first) && !(second && timing.test(second))) {
+                continue;
+            }
+            parts.push(content.slice(start, separator.index));
+        }
+        start = end;
+    }
+    parts.push(content.slice(start));
+    return parts;
+};
+
+/**
  * Parses captions in WebVTT format (Web Video Text Tracks Format).
  * @param content - The subtitle content
  * @param options - Parse options
@@ -48,7 +76,7 @@ const helper = {
 const parse = (content: string, options: ParseOptions) => {
     let index = 1;
     const captions: Caption[] = [];
-    const parts = content.split(/\r?\n\s*\n/);
+    const parts = splitBlocks(content);
     for (const part of parts) {
         // WebVTT data
         const regex =
@@ -118,7 +146,8 @@ const build = (captions: Caption[], options: BuildOptions) => {
         if (!caption.type || caption.type === "caption") {
             content += (i + 1).toString() + eol;
             content += `${helper.toTimeString(caption.start)} --> ${helper.toTimeString(caption.end)}${eol}`;
-            content += caption.text + eol;
+            const text = caption.text ? caption.text.replace(/(^|\r?\n)(?=\r?\n|$)/g, "$1 ") : caption.text;
+            content += text + eol;
             content += eol;
             continue;
         }
