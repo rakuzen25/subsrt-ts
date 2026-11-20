@@ -45,14 +45,14 @@ export class Handler implements BaseHandler {
                 throw new TypeError(`Expected string, got ${typeof content}!`);
             }
 
-            return detect(content);
+            return detect(content.replace(/^\uFEFF/u, ""));
         };
         this.parse = (content: string, _options: ParseOptions) => {
             if (typeof content !== "string") {
                 throw new TypeError(`Expected string, got ${typeof content}!`);
             }
 
-            return parse(content, _options);
+            return parse(content.replace(/^\uFEFF/u, ""), _options);
         };
     }
 }

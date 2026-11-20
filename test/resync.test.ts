@@ -41,9 +41,7 @@ describe("Resync", () => {
         expect(resynced).toHaveLength(captions.length);
 
         expect((resynced[3] as ContentCaption).frame).toBeDefined();
-        expect((resynced[3] as ContentCaption).frame?.start).toBe((((captions[3] as ContentCaption)?.frame?.start ?? 0) * 30) / 25);
-        expect((resynced[3] as ContentCaption).frame?.end).toBe((((captions[3] as ContentCaption)?.frame?.end ?? 0) * 30) / 25);
-        expect((resynced[3] as ContentCaption).frame?.count).toBe((((captions[3] as ContentCaption)?.frame?.count ?? 0) * 30) / 25);
+        expect((resynced[3] as ContentCaption).frame).toEqual({ start: 326, end: 502, count: 176 });
     });
 
     test("should resync with non-linear function", () => {

@@ -41,4 +41,9 @@ describe("Build", () => {
         const content = build(captions, { format: "vtt" });
         expect(content).not.toMatch(/WEBVTT\r?\nWEBVTT/);
     });
+
+    test("should write MicroDVD times as frames at the given fps", () => {
+        const captions = [{ type: "caption", start: 600, end: 4160, text: "Hi" }] as Caption[];
+        expect(build(captions, { format: "sub", fps: 25 } as BuildOptions)).toBe("{15}{104}Hi\r\n");
+    });
 });

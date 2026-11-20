@@ -14,12 +14,24 @@ const DEFAULT_FPS = 25;
  * @see https://en.wikipedia.org/wiki/MicroDVD
  */
 const parse = (content: string, options: SUBParseOptions) => {
-    options.fps ??= DEFAULT_FPS;
-    const fps = options.fps > 0 ? options.fps : DEFAULT_FPS;
+    const parts = content.split(/\r?\n/);
+    const header = parts.findIndex((part) => part.trim() !== "");
+    const declared = /^\{[01]\}\{[01]\}(\d+(?:\.\d+)?)\s*$/.exec(parts[header] ?? "");
+    const fileFps = declared ? parseFloat(declared[1]) : DEFAULT_FPS;
+    const fps = options.fps && options.fps > 0 ? options.fps : fileFps;
+    /**
+     * Converts a frame number to milliseconds at the file's frame rate.
+     * @param frame - The frame number
+     * @returns The time in milliseconds
+     */
+    const toMilliseconds = (frame: number) => Math.round((frame / fps) * 1000);
     const captions = [];
     const eol = options.eol ?? "\r\n";
-    const parts = content.split(/\r?\n/);
     for (let i = 0; i < parts.length; i++) {
+        if (declared && i === header) {
+            continue;
+        }
+
         const regex = /^\{(\d+)\}\{(\d+)\}(.*)$/;
         const match = regex.exec(parts[i]);
         if (match) {
@@ -31,8 +43,8 @@ const parse = (content: string, options: SUBParseOptions) => {
                 end: parseInt(match[2], 10),
                 count: parseInt(match[2]) - parseInt(match[1], 10),
             };
-            caption.start = Math.round(caption.frame.start / fps);
-            caption.end = Math.round(caption.frame.end / fps);
+            caption.start = toMilliseconds(caption.frame.start);
+            caption.end = toMilliseconds(caption.frame.end);
             caption.duration = caption.end - caption.start;
             const lines = match[3].split(/\|/);
             caption.content = lines.join(eol);
@@ -57,13 +69,19 @@ const parse = (content: string, options: SUBParseOptions) => {
  */
 const build = (captions: Caption[], options: SUBBuildOptions) => {
     const fps = options.fps && options.fps > 0 ? options.fps : DEFAULT_FPS;
+    /**
+     * Converts a time in milliseconds to the nearest frame number.
+     * @param milliseconds - The time in milliseconds
+     * @returns The frame number
+     */
+    const toFrame = (milliseconds: number) => Math.round((milliseconds * fps) / 1000);
 
     let sub = "";
     const eol = options.eol ?? "\r\n";
     for (const caption of captions) {
         if (!caption.type || caption.type === "caption") {
-            const startFrame = typeof caption.frame === "object" && caption.frame.start >= 0 ? caption.frame.start : caption.start * fps;
-            const endFrame = typeof caption.frame === "object" && caption.frame.end >= 0 ? caption.frame.end : caption.end * fps;
+            const startFrame = typeof caption.frame === "object" && caption.frame.start >= 0 ? caption.frame.start : toFrame(caption.start);
+            const endFrame = typeof caption.frame === "object" && caption.frame.end >= 0 ? caption.frame.end : toFrame(caption.end);
             const text = caption.text.replace(/\r?\n/, "|");
             sub += `{${startFrame}}{${endFrame}}${text}${eol}`;
             continue;
